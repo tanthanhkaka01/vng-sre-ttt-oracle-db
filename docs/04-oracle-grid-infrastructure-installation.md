@@ -67,7 +67,7 @@ Each RAC node must be configured with:
 
 ## Lab Installation Steps (Detail)
 
-    Run the steps on both nodes unless specified otherwise.
+> Run the steps on both nodes unless specified otherwise.
 
 ### 1. set hosts file (do on both node)
 
