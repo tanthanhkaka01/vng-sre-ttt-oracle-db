@@ -161,7 +161,7 @@ Example DNS configuration:
 
 ```text
 # Database endpoint
-db.company.local            scan-db.company.local
+db.company.local    CNAME   scan-db.company.local
 
 # SCAN records
 scan-db.company.local       192.168.10.101

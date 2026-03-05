@@ -2,6 +2,8 @@
 ### High Availability, Disaster Recovery and Observability
 ### SRE Technical Assignment
 
+---
+
 ## Overview
 The proposed architecture is designed to provide high availability (HA), fault tolerance, and disaster recovery (DR) for a production-grade database system.
 
@@ -17,6 +19,8 @@ The architecture follows common SRE principles including:
 - Disaster recovery readiness
 - Infrastructure designed for horizontal scalability
 
+---
+
 ## Key design goals
 
 - Zero or near-zero data loss
@@ -25,9 +29,13 @@ The architecture follows common SRE principles including:
 - Transparent failover for applications
 - Minimal operational complexity
 
+---
+
 ## Architecture Overview
 ![Oracle HA Architecture](images/architecture.png)
 *Figure 1: High Availability Oracle Database Architecture using RAC and Data Guard.*
+
+---
 
 ## Architecture Summary
 
@@ -61,7 +69,25 @@ The following diagram summarizes the high-level architecture and data flow betwe
                (Disaster Recovery DC)
 ```
 
-Full documentation is available in the /docs directory.
+---
+
+## Technical Design Document Structure
+The detailed technical design and implementation documentation
+is organized in the /docs directory.
+
+01 – Infrastructure preparation
+02 – Network and DNS configuration
+03 – Shared storage and ASM disks
+04 – Operating system configuration
+05 – Oracle Grid Infrastructure installation
+06 – Oracle RAC database installation
+07 – Data Guard configuration
+08 – Backup strategy
+09 – Monitoring and observability
+10 – Failover and recovery scenarios
+11 – Automation strategy
+
+---
 
 ## Architecture Detail
 
