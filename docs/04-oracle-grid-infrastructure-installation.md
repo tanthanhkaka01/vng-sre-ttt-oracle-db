@@ -80,7 +80,7 @@ nano /etc/hosts
 192.168.10.102 rac02
 ```
 
-### Open Required Firewall Ports
+### 2. Open Required Firewall Ports
 
 ```bash
 sudo firewall-cmd --permanent --add-port=1521/tcp
@@ -117,7 +117,7 @@ systemctl disable firewalld
 
 ---
 
-## Create Required Users and Groups
+### 3. Create Required Users and Groups
 
 Create Oracle required groups:
 
@@ -167,7 +167,7 @@ groups oracle
 
 ---
 
-## Create Oracle Directory Structure
+### 4. Create Oracle Directory Structure
 
 Create required directories:
 
@@ -201,7 +201,7 @@ chmod -R 775 /u01/app
 
 ---
 
-## Configure Shared Storage
+### 5. Configure Shared Storage
 
 This lab uses Oracle VM VirtualBox shared disks.
 
@@ -257,7 +257,7 @@ ls -l /dev/RAC_*
 
 ---
 
-## Install GUI Environment
+### 6. Install GUI Environment
 
 Install GUI:
 
@@ -293,7 +293,7 @@ vncserver :1 -geometry 1024x768 -depth 24
 
 ---
 
-## Configure SSH Equivalency
+### 7. Configure SSH Equivalency
 
 Login as grid user:
 
@@ -324,7 +324,7 @@ ssh rac02
 
 ---
 
-## Configure /dev/shm
+### 8. Configure /dev/shm
 
 Set shared memory size equal to RAM.
 
@@ -351,7 +351,7 @@ systemctl daemon-reload
 
 ---
 
-## Configure Swap
+### 9. Configure Swap
 
 Create swap file:
 
@@ -375,7 +375,7 @@ Add to fstab:
 
 ---
 
-## Copy Oracle Installation Files
+### 10. Copy Oracle Installation Files
 
 Copy the following zip files:
 
@@ -393,7 +393,7 @@ Destination:
 
 ---
 
-## Install Oracle Grid Infrastructure
+### 11. Install Oracle Grid Infrastructure
 
 Login as grid user:
 
@@ -409,7 +409,7 @@ unzip /u01/app/grid_install/LINUX.X64_213000_grid_home.zip -d /u01/app/21c/grid
 
 ---
 
-## Configure Grid Environment
+### 12. Configure Grid Environment
 
 Create environment file:
 
@@ -446,7 +446,7 @@ source ~/.bash_profile
 
 ---
 
-## Start Grid Installer
+### 13. Start Grid Installer
 
 Start VNC:
 
@@ -468,9 +468,9 @@ nohup /u01/app/21c/grid/gridSetup.sh > /u01/app/21c/grid/grid_setup.log 2>&1 &
 
 ---
 
-## Grid Installation Configuration
+### 14. Grid Installation Configuration
 
-### Cluster Configuration
+#### 14.1. Cluster Configuration
 
 ```text
 Cluster Name: rac
@@ -478,21 +478,21 @@ SCAN Name: rac-scan.private.db.com
 SCAN Port: 1521
 ```
 
-### Add Nodes
+#### 14.2. Add Nodes
 
 ```text
 rac01
 rac02
 ```
 
-### Network Interfaces
+#### 14.3. Network Interfaces
 
 | Interface | Purpose       |
 | --------- | ------------- |
 | enp0s3    | Public        |
 | enp0s8    | Private / ASM |
 
-### ASM Disk Group
+#### 14.4. ASM Disk Group
 
 Disk group name:
 
@@ -520,7 +520,7 @@ ASM password:
 oracle
 ```
 
-### Check CRS Services
+#### 14.5. Check CRS Services
 
 Configure CRS environment for root:
 
@@ -555,7 +555,7 @@ crsctl start crs
 
 ---
 
-## Configure ASM Disk Groups
+### 15. Configure ASM Disk Groups
 
 Run ASMCA:
 
@@ -568,7 +568,7 @@ nohup /u01/app/21c/grid/bin/asmca > /tmp/asmca_setup.log 2>&1 &
 
 Create disk groups.
 
-### DATA
+#### 15.1. DATA
 
 ```text
 Disk Group Name: DATA
@@ -576,7 +576,7 @@ Redundancy: External
 Disk: /dev/RAC_DATA_01
 ```
 
-### FRA
+#### 15.2. FRA
 
 ```text
 Disk Group Name: FRA
@@ -584,7 +584,7 @@ Redundancy: External
 Disk: /dev/RAC_FRA_01
 ```
 
-## Installation Completed
+### 16. Installation Completed
 
 After completing these steps:
 
