@@ -157,7 +157,9 @@ This quorum-based mechanism ensures cluster consistency and prevents multiple no
 Oracle Data Guard is used to replicate data from the primary cluster to a standby cluster located in a separate datacenter.
 
 Replication mode:
-   SYNC (Synchronous Redo Transport)
+```text
+SYNC (Synchronous Redo Transport)
+```
 
 In synchronous mode:
 - Transactions are committed only after redo is written to both primary and standby systems.
