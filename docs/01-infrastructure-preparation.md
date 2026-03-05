@@ -148,14 +148,12 @@ This layout ensures separation of database data, recovery files, and cluster met
 The nodes are distributed across two datacenters to ensure disaster recovery capability.
 ```text
 Primary Datacenter
-
-rac-node1
-rac-node2
+- rac-node1
+- rac-node2
 
 Disaster Recovery Datacenter
-
-rac-node3
-rac-node4
+- rac-node3
+- rac-node4
 ```
 
 The primary datacenter hosts the **primary Oracle RAC database**, while the secondary datacenter hosts the **standby RAC cluster** used for Data Guard replication.
