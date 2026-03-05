@@ -70,7 +70,10 @@ This architecture is designed to ensure high availability, fault tolerance, and 
 ### 1. Application Connection Layer
 
 Applications do not connect directly to a specific database node.
-Instead, they connect using a logical database endpoint: db.company.local
+Instead, they connect using a logical database endpoint:
+```text
+db.company.local
+```
 
 This abstraction layer allows the infrastructure team to redirect traffic to a different database cluster during failover events without modifying application configurations.
 
@@ -90,7 +93,9 @@ Application connection flow:
 ### 2. DNS Layer
 
 The DNS entry:
-   db.company.local
+```text
+db.company.local
+```
 
 is configured with a TTL (Time-To-Live) of 30 seconds.
 
@@ -197,12 +202,14 @@ Because DNS TTL is configured to 30 seconds, most applications reconnect within 
 ### 8. High Availability and Disaster Recovery Strategy
 
 This architecture provides two levels of resilience:
-- Intra-Datacenter High Availability - Provided by Oracle RAC.
-      Node failure does not impact overall database availability.
-      Sessions can reconnect to surviving instances.
-- Cross-Datacenter Disaster Recovery - Provided by Oracle Data Guard.
-      Standby cluster located in a separate datacenter.
-      Continuous replication ensures minimal or zero data loss.
+
+- **Intra-Datacenter High Availability** – Provided by **Oracle RAC**
+  - Node failure does not impact overall database availability
+  - Sessions automatically reconnect to surviving instances
+
+- **Cross-Datacenter Disaster Recovery** – Provided by **Oracle Data Guard**
+  - Standby cluster located in a separate datacenter
+  - Continuous replication ensures minimal or zero data loss
 
 ### 9. Target Availability Objectives
 
