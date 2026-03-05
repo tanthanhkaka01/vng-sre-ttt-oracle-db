@@ -45,7 +45,7 @@ Each Oracle RAC node is deployed as a dedicated virtual machine with the followi
 | Resource | Specification |
 |--------|--------|
 | CPU | 32 vCPU |
-| Memory | 32 GB RAM |
+| Memory | 128 GB RAM |
 | System Disk | 1 TB |
 | Operating System | Oracle Linux 8 Update 8 |
 | Database Version | Oracle Database 21c |
@@ -99,7 +99,8 @@ Oracle Data Guard redo transport occurs over the client access network between t
 
 ## Shared Storage Configuration
 
-Oracle RAC requires shared storage accessible by all nodes within the same cluster.
+Shared storage is provided separately in each datacenter.
+Each RAC cluster accesses its own shared storage locally.
 
 Shared storage is provisioned from an enterprise SAN storage system and presented to the RAC nodes as multiple LUNs.
 
@@ -198,3 +199,23 @@ See:
 ```text
 02-network-and-dns-configuration.md
 ```
+
+---
+
+## Availability Design
+
+The system is designed to achieve high availability through multiple layers:
+
+Database Layer
+- Oracle RAC provides node-level high availability within each datacenter.
+- If one RAC node fails, database services automatically failover to the remaining node.
+
+Datacenter Layer
+- Oracle Data Guard provides disaster recovery between the primary and standby clusters.
+- In case of a full primary site outage, the standby cluster can be promoted to primary.
+
+Storage Layer
+- SAN storage uses multipath I/O to eliminate single points of failure.
+
+Network Layer
+- Multiple network interfaces separate client traffic, cluster interconnect, and management traffic.
