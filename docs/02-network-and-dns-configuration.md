@@ -83,8 +83,13 @@ Each RAC node is assigned a VIP managed by Oracle Clusterware.
 
 Example VIP configuration:
 ```text
+Primary Datacenter
 rac-node1-vip.company.local   192.168.10.21
 rac-node2-vip.company.local   192.168.10.22
+
+Disaster Recovery Datacenter
+rac-node3-vip.company.local   192.168.110.21
+rac-node4-vip.company.local   192.168.110.22
 ```
 
 If a node fails, its VIP automatically fails over to another node in the cluster.
@@ -197,7 +202,7 @@ rac-node4.company.local     192.168.110.12
 
 Oracle Data Guard requires network connectivity between the primary and standby clusters.
 
-Redo transport occurs over the client access network.
+Redo transport typically occurs over the client access network or a dedicated replication network depending on infrastructure design.
 
 Example communication flow:
 
@@ -222,6 +227,17 @@ Recommended best practices for Oracle RAC networking include:
 - Use redundant network paths
 - Configure DNS correctly before installing Oracle Grid Infrastructure
 - Avoid using /etc/hosts for SCAN resolution
+
+---
+
+## Node Network Mapping
+
+| Node | Public IP | VIP | Private Interconnect |
+|-----|-----|-----|-----|
+| rac-node1 | 192.168.10.11 | 192.168.10.21 | 192.168.20.11 |
+| rac-node2 | 192.168.10.12 | 192.168.10.22 | 192.168.20.12 |
+| rac-node3 | 192.168.110.11 | 192.168.110.21 | 192.168.120.11 |
+| rac-node4 | 192.168.110.12 | 192.168.110.22 | 192.168.120.12 |
 
 ---
 
