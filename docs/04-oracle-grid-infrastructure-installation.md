@@ -48,7 +48,7 @@ Application
 
 Before installing Oracle Grid Infrastructure, ensure the following prerequisites are completed.
 
-*OS Configuration*
+### OS Configuration
 
 Each RAC node must be configured with:
 
