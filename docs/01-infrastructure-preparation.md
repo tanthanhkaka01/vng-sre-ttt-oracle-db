@@ -99,25 +99,24 @@ Oracle Data Guard replication occurs over the client access network between the 
 
 Oracle RAC requires shared storage accessible by all nodes within the same cluster.
 
-In this architecture, shared storage is provided through **VMware shared disks** configured with multi-writer mode.
+Shared storage is provisioned from an enterprise SAN storage system and presented to the RAC nodes as multiple LUNs.
 
-The following shared disks are attached to the RAC nodes:
+Example storage layout:
 
-| Disk Name | Purpose | Size |
-|--------|--------|--------|
-| DATA | Database datafiles | 10 TB |
-| FRA | Fast Recovery Area | 10 TB |
-| OCR1 | Oracle Cluster Registry | 200 GB |
-| OCR2 | Oracle Cluster Registry | 200 GB |
-| OCR3 | Oracle Cluster Registry | 200 GB |
+| LUN | Purpose | Size |
+|-----|--------|------|
+| LUN_DATA | Database datafiles | 10 TB |
+| LUN_FRA | Fast Recovery Area | 6 TB |
+| LUN_OCR1 | OCR / Voting disk | 200 GB |
+| LUN_OCR2 | OCR / Voting disk | 200 GB |
+| LUN_OCR3 | OCR / Voting disk | 200 GB |
 
 Total shared disks:
 ```text
 5 disks
 ```
 
-
-These disks will later be used to create ASM disk groups.
+These disks will later be used to create Oracle ASM disk groups for database storage and cluster metadata.
 
 ---
 
