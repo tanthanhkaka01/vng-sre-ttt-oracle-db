@@ -113,7 +113,9 @@ Because of the 30-second TTL, applications will reconnect to the new database en
 Oracle SCAN (Single Client Access Name) provides a unified entry point for database connections.
 
 Instead of connecting directly to individual RAC nodes, applications connect to a SCAN address such as:
-   scan-db.company.local
+```text
+scan-db.company.local
+```
 
 The SCAN listener provides several important capabilities:
 - Connection load balancing across RAC nodes
@@ -185,7 +187,9 @@ If the primary datacenter becomes unavailable, the following recovery procedure 
 - Promote the standby database using Data Guard failover
 - Activate the standby RAC as the new primary database
 - Update DNS entry:
-      db.company.local → scan-standby.company.local
+```text
+db.company.local → scan-standby.company.local
+```
 - Applications reconnect automatically after DNS refresh.
 
 Because DNS TTL is configured to 30 seconds, most applications reconnect within 30–60 seconds.
