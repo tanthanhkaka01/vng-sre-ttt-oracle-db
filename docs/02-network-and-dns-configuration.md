@@ -331,6 +331,7 @@ All RAC nodes must be able to resolve these records correctly.
 After completing the network and DNS configuration, the next step is to configure shared storage and ASM disks for Oracle RAC.
 
 See:
+
 ```text
 03-shared-storage-and-asm-disks.md
 ```

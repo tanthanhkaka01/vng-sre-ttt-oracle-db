@@ -191,17 +191,6 @@ This infrastructure provides the foundation required to deploy a highly availabl
 
 ---
 
-## Next Steps
-
-After completing the infrastructure preparation, the next step is to configure the network and DNS environment required for Oracle RAC and application connectivity.
-
-See:
-```text
-02-network-and-dns-configuration.md
-```
-
----
-
 ## Availability Design
 
 The system is designed to achieve high availability through multiple layers:
@@ -219,3 +208,15 @@ Storage Layer
 
 Network Layer
 - Multiple network interfaces separate client traffic, cluster interconnect, and management traffic.
+
+---
+
+## Next Steps
+
+After completing the infrastructure preparation, the next step is to configure the network and DNS environment required for Oracle RAC and application connectivity.
+
+See:
+
+```text
+02-network-and-dns-configuration.md
+```
