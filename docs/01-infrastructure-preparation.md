@@ -147,13 +147,13 @@ This layout ensures separation of database data, recovery files, and cluster met
 
 The nodes are distributed across two datacenters to ensure disaster recovery capability.
 ```text
-Primary Datacenter
-- rac-node1
-- rac-node2
+Primary Datacenter:
+rac-node1
+rac-node2
 
-Disaster Recovery Datacenter
-- rac-node3
-- rac-node4
+Disaster Recovery Datacenter:
+rac-node3
+rac-node4
 ```
 
 The primary datacenter hosts the **primary Oracle RAC database**, while the secondary datacenter hosts the **standby RAC cluster** used for Data Guard replication.
@@ -175,11 +175,11 @@ rac-node3
 rac-node4
 
 Shared Disks:
-DATA 10TB
-FRA 10TB
-OCR1 200GB
-OCR2 200GB
-OCR3 200GB
+LUN_DATA 10TB
+LUN_FRA 10TB
+LUN_OCR1 200GB
+LUN_OCR2 200GB
+LUN_OCR3 200GB
 ```
 
 This infrastructure provides the foundation required to deploy a highly available Oracle RAC cluster with cross-datacenter disaster recovery using Oracle Data Guard.
