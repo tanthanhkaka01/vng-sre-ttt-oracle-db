@@ -75,17 +75,16 @@ The following diagram summarizes the high-level architecture and data flow betwe
 The detailed technical design and implementation documentation
 is organized in the /docs directory.
 
-- 01 – Infrastructure preparation
-- 02 – Network and DNS configuration
-- 03 – Shared storage and ASM disks
-- 04 – Operating system configuration
-- 05 – Oracle Grid Infrastructure installation
-- 06 – Oracle RAC database installation
-- 07 – Data Guard configuration
-- 08 – Backup strategy
-- 09 – Monitoring and observability
-- 10 – Failover and recovery scenarios
-- 11 – Automation strategy
+- 01-infrastructure-preparation.md
+- 02-network-and-dns-configuration.md
+- 03-shared-storage-and-asm-disks.md
+- 04-oracle-grid-infrastructure-installation.md
+- 05-oracle-rac-database-installation.md
+- 06-data-guard-configuration.md
+- 07-backup-and-recovery-strategy.md
+- 08-monitoring-and-observability.md
+- 09-failover-and-disaster-recovery.md
+- 10-automation-strategy.md
 
 ---
 
