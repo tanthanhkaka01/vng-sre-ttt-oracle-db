@@ -22,7 +22,6 @@ Platform: VMware vSphere
 Hypervisor: VMware ESXi
 ```
 
-
 The infrastructure is distributed across two datacenters:
 
 - **Primary Datacenter**
@@ -47,7 +46,7 @@ Each Oracle RAC node is deployed as a dedicated virtual machine with the followi
 | Memory | 32 GB RAM |
 | System Disk | 1 TB |
 | Operating System | Oracle Linux 8 Update 8 |
-| Database Version | Oracle Database 19c / 21c |
+| Database Version | Oracle Database 21c |
 
 Total nodes:
 ```text
@@ -71,18 +70,28 @@ Each RAC node uses multiple network interfaces to separate different types of tr
 
 | Network Type | Purpose |
 |--------|--------|
-| Public Network | Client database connections |
-| Private Interconnect | RAC node communication |
-| Management Network | System administration |
+| Client Access Network | Application database connections |
+| Private Interconnect | RAC node communication and cache fusion |
+| Management Network | System administration and monitoring |
 
-Example network layout:
+Example network layout (Primary Datacenter):
+
 ```text
-Public Network : 192.168.10.0/24
-Private Interconnect : 192.168.20.0/24
-Management Network : 192.168.30.0/24
+Client Access Network   : 192.168.10.0/24
+Private Interconnect    : 192.168.20.0/24
+Management Network      : 192.168.30.0/24
+```
+
+Example network layout (DR Datacenter):
+```text
+Client Access Network   : 192.168.110.0/24
+Private Interconnect    : 192.168.120.0/24
+Management Network      : 192.168.130.0/24
 ```
 
 The private interconnect network is used by Oracle Clusterware for node heartbeat and cache fusion traffic.
+
+Oracle Data Guard replication occurs over the client access network between the primary and standby clusters.
 
 ---
 
