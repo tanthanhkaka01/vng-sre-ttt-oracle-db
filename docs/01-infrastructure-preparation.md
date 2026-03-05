@@ -14,7 +14,7 @@ The infrastructure preparation includes:
 
 ---
 
-# Platform
+## Platform
 
 The environment is deployed on the following virtualization platform:
 ```text
@@ -36,7 +36,7 @@ Each datacenter hosts two Oracle RAC nodes to ensure redundancy and high availab
 
 ---
 
-# Virtual Machine Configuration
+## Virtual Machine Configuration
 
 Each Oracle RAC node is deployed as a dedicated virtual machine with the following specifications:
 
@@ -64,7 +64,7 @@ rac-node4 (DR DC)
 
 ---
 
-# Network Architecture
+## Network Architecture
 
 Each RAC node uses multiple network interfaces to separate different types of traffic.
 
@@ -95,7 +95,7 @@ Oracle Data Guard replication occurs over the client access network between the 
 
 ---
 
-# Shared Storage Configuration
+## Shared Storage Configuration
 
 Oracle RAC requires shared storage accessible by all nodes within the same cluster.
 
@@ -120,7 +120,7 @@ These disks will later be used to create Oracle ASM disk groups for database sto
 
 ---
 
-# ASM Disk Layout
+## ASM Disk Layout
 
 Oracle ASM (Automatic Storage Management) is used to manage database storage.
 
@@ -135,7 +135,7 @@ The disk groups are organized as follows:
 Example layout:
 ```text
 +DATA -> DATA disk (10 TB)
-+FRA -> FRA disk (10 TB)
++FRA -> FRA disk (6 TB)
 +OCR -> OCR1, OCR2, OCR3 (200 GB each)
 ```
 
@@ -143,7 +143,7 @@ This layout ensures separation of database data, recovery files, and cluster met
 
 ---
 
-# Node Distribution
+## Node Distribution
 
 The nodes are distributed across two datacenters to ensure disaster recovery capability.
 ```text
@@ -160,7 +160,7 @@ The primary datacenter hosts the **primary Oracle RAC database**, while the seco
 
 ---
 
-# Infrastructure Summary
+## Infrastructure Summary
 ```text
 Total Datacenters: 2
 
@@ -176,7 +176,7 @@ rac-node4
 
 Shared Disks:
 LUN_DATA 10TB
-LUN_FRA 10TB
+LUN_FRA 6TB
 LUN_OCR1 200GB
 LUN_OCR2 200GB
 LUN_OCR3 200GB
@@ -186,7 +186,7 @@ This infrastructure provides the foundation required to deploy a highly availabl
 
 ---
 
-# Next Steps
+## Next Steps
 
 After completing the infrastructure preparation, the next step is to configure the network and DNS environment required for Oracle RAC and application connectivity.
 
