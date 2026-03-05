@@ -17,7 +17,7 @@ The architecture follows common SRE principles including:
 - Disaster recovery readiness
 - Infrastructure designed for horizontal scalability
 
-## Key design goals:
+## Key design goals
 
 - Zero or near-zero data loss
 - High availability within a datacenter
