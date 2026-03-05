@@ -12,6 +12,8 @@ The infrastructure preparation includes:
 - Shared storage configuration
 - ASM disk layout planning
 
+The goal is to establish a stable infrastructure foundation before installing Oracle Grid Infrastructure and Oracle RAC.
+
 ---
 
 ## Platform
@@ -91,7 +93,7 @@ Management Network      : 192.168.130.0/24
 
 The private interconnect network is used by Oracle Clusterware for node heartbeat and cache fusion traffic.
 
-Oracle Data Guard replication occurs over the client access network between the primary and standby clusters.
+Oracle Data Guard redo transport occurs over the client access network between the primary and standby clusters.
 
 ---
 
@@ -100,6 +102,8 @@ Oracle Data Guard replication occurs over the client access network between the 
 Oracle RAC requires shared storage accessible by all nodes within the same cluster.
 
 Shared storage is provisioned from an enterprise SAN storage system and presented to the RAC nodes as multiple LUNs.
+
+These LUNs are typically accessed using multipath I/O to ensure redundancy and eliminate single points of failure in the storage path.
 
 Example storage layout:
 
