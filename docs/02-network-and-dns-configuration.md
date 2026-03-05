@@ -228,6 +228,11 @@ DR Datacenter
 
 rac-node3   192.168.110.11
 rac-node4   192.168.110.12
+
+SCAN IPs DR
+192.168.110.101
+192.168.110.102
+192.168.110.103
 ```
 
 Applications connect to the database using:
@@ -237,6 +242,56 @@ db.company.local
 ```
 
 Oracle RAC handles connection routing internally through SCAN listeners.
+
+---
+
+## Cluster Interconnect Configuration
+
+Oracle RAC relies heavily on the private interconnect network for
+Cache Fusion traffic between instances.
+
+Requirements:
+
+- Low latency network (< 1 ms recommended)
+- High bandwidth (10 GbE recommended for production)
+- Dedicated network interface
+- Redundant network path if possible
+
+Oracle Clusterware automatically detects the interconnect interface
+during Grid Infrastructure installation.
+
+---
+
+## DNS Verification
+
+Before installing Oracle Grid Infrastructure, verify that all hostnames
+and SCAN records resolve correctly from every RAC node.
+
+Example verification commands:
+
+```bash
+nslookup rac-node1.company.local
+nslookup rac-node2.company.local
+
+nslookup scan-db.company.local
+```
+
+Expected result:
+
+```text
+Name: scan-db.company.local
+Address: 192.168.10.101
+Address: 192.168.10.102
+Address: 192.168.10.103
+```
+
+You can also verify using:
+
+```bash
+dig scan-db.company.local
+```
+
+All RAC nodes must be able to resolve these records correctly.
 
 ---
 
