@@ -20,6 +20,17 @@ rac02
 
 ---
 
+## Environment
+
+| Component | Value |
+|----------|------|
+| OS | Oracle Linux 8 Update 8 |
+| Database | Oracle 21c |
+| Nodes | 2 |
+| Storage | ASM |
+
+---
+
 ## Architecture Components
 
 Oracle Grid Infrastructure includes the following major components:
@@ -69,15 +80,21 @@ Each RAC node must be configured with:
 
 > Run the steps on both nodes unless specified otherwise.
 
-### 1. set hosts file (do on both node)
+### 1. Configure Hosts File (do on both node)
 
 ```bash
 nano /etc/hosts
 ```
 
 ```text
-192.168.10.101 rac01
-192.168.10.102 rac02
+192.168.10.11 rac01
+192.168.10.12 rac02
+
+192.168.10.21 rac01-vip
+192.168.10.22 rac02-vip
+
+192.168.20.11 rac01-priv
+192.168.20.12 rac02-priv
 ```
 
 ### 2. Open Required Firewall Ports
@@ -99,18 +116,18 @@ sudo firewall-cmd --permanent --add-port=4888/tcp
 
 Reload firewall rules:
 
-```text
+```bash
 sudo firewall-cmd --reload
 ```
 
 Check firewall configuration:
 
-```text
+```bash
 sudo firewall-cmd --list-all
 ```
 
 Disable firewall:
-```text
+```bash
 systemctl stop firewalld
 systemctl disable firewalld
 ```
@@ -203,57 +220,91 @@ chmod -R 775 /u01/app
 
 ### 5. Configure Shared Storage
 
-This lab uses Oracle VM VirtualBox shared disks.
+This lab uses **SAN storage (LUNs)** presented to both RAC nodes.
 
-Create the following disks:
+Create the following LUNs on the SAN storage system.
 
-Disk	Size	Purpose
-OCR1	10 GB	Cluster registry
-OCR2	10 GB	Cluster registry
-OCR3	10 GB	Cluster registry
-FRA	30 GB	Fast Recovery Area
-DATA	50 GB	Database files
+| LUN Name | Size | Usage |
+|----------|------|------|
+| LUN_DATA | 10 TB | ASM `+DATA` disk group |
+| LUN_FRA  | 6 TB  | ASM `+RECO` disk group |
+| LUN_OCR1 | 200 GB | ASM `+GRID` disk group |
+| LUN_OCR2 | 200 GB | ASM `+GRID` disk group |
+| LUN_OCR3 | 200 GB | ASM `+GRID` disk group |
 
-Attach the disks to both RAC nodes.
+The LUNs must be presented to **both RAC nodes** using the SAN storage system.
 
-Verify disks:
+#### Verify SAN Disks:
 
+After presenting the LUNs to the servers, verify that the disks are visible.
+
+```bash
 lsblk
-Prepare ASM Disks
+```
 
-Clear disks:
+Example output:
 
-dd if=/dev/zero of=/dev/sdb bs=1M count=100
-dd if=/dev/zero of=/dev/sdc bs=1M count=100
-dd if=/dev/zero of=/dev/sdd bs=1M count=100
-dd if=/dev/zero of=/dev/sde bs=1M count=100
-dd if=/dev/zero of=/dev/sdf bs=1M count=100
+```text
+sdb   10T
+sdc   6T
+sdd   200G
+sde   200G
+sdf   200G
+```
 
-Check disk serial numbers:
+Check disk identifiers:
 
+```bash
 udevadm info --query=all --name=/dev/sdb | grep ID_SERIAL
-Configure udev Rules for ASM
+```
 
-Create rule file:
+#### Configure udev Rules for ASM
 
+To ensure persistent disk names across reboots, configure udev rules for ASM disks.
+
+Create the rule file:
+
+```bash
 nano /etc/udev/rules.d/99-oracle-asm.rules
+```
 
 Example configuration:
 
-ENV{ID_SERIAL}=="VBOX_HARDDISK_VB7fd22947-1ee2be80", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_DATA_01"
-ENV{ID_SERIAL}=="VBOX_HARDDISK_VBcea8deba-23e870e8", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_FRA_01"
-ENV{ID_SERIAL}=="VBOX_HARDDISK_VBec27af00-c7ce861a", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_OCR_01"
-ENV{ID_SERIAL}=="VBOX_HARDDISK_VB0a450419-7e5bd8c9", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_OCR_02"
-ENV{ID_SERIAL}=="VBOX_HARDDISK_VB520ecf59-e376a5d1", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_OCR_03"
+```text
+KERNEL=="sdb", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_DATA_01"
+KERNEL=="sdc", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_FRA_01"
+
+KERNEL=="sdd", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_OCR_01"
+KERNEL=="sde", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_OCR_02"
+KERNEL=="sdf", OWNER="grid", GROUP="asmadmin", MODE="0660", SYMLINK+="RAC_OCR_03"
+```
 
 Reload rules:
 
+```bash
 udevadm control --reload-rules
 udevadm trigger
+```
 
-Verify:
+Verify the ASM disks:
 
+```bash
 ls -l /dev/RAC_*
+```
+
+Example output:
+
+```text
+/dev/RAC_DATA_01
+/dev/RAC_FRA_01
+/dev/RAC_OCR_01
+/dev/RAC_OCR_02
+/dev/RAC_OCR_03
+```
+
+These device paths will be used later when creating ASM disk groups during the Grid Infrastructure installation.
+
+> In production environments, SAN disks are typically accessed through **multipath devices (/dev/mapper/mpathX)** instead of raw block devices.
 
 ---
 
@@ -324,9 +375,11 @@ ssh rac02
 
 ---
 
-### 8. Configure /dev/shm
+### 8. Configure /dev/shm and Hugepage
 
-Set shared memory size equal to RAM.
+> For servers with 128GB RAM, a shared memory size of 120GB and swap size of 16GB is commonly used in Oracle database environments.
+
+Set shared memory size close to system RAM (typically 80%–95%).
 
 ```bash
 umount /dev/shm
@@ -348,6 +401,94 @@ Reload systemd:
 ```bash
 systemctl daemon-reload
 ```
+
+#### Configure HugePages for Oracle RAC
+
+HugePages improve memory management for Oracle databases by allocating large memory pages for the SGA, reducing CPU overhead and memory fragmentation.
+
+For servers with large RAM (≥ 64GB), Oracle strongly recommends enabling HugePages.
+
+First check HugePage size:
+
+```bash
+grep Hugepagesize /proc/meminfo
+```
+
+Example output:
+
+```text
+Hugepagesize:       2048 kB
+```
+
+This means the HugePage size is 2MB.
+
+> HugePage size is determined by the Linux kernel and is typically **2MB** on most distributions.
+
+Assume the planned SGA size = 96GB.
+
+Calculate required HugePages:
+
+```text
+96GB / 2MB = 49152 pages
+```
+
+Configure HugePages:
+
+```bash
+nano /etc/sysctl.conf
+```
+
+Add the following parameter:
+
+```text
+vm.nr_hugepages = 49152
+```
+
+Apply the configuration:
+
+```bash
+sysctl -p
+```
+
+Verify HugePages configuration:
+
+```bash
+grep Huge /proc/meminfo
+```
+
+Example output:
+
+```text
+HugePages_Total:   49152
+HugePages_Free:    49152
+Hugepagesize:      2048 kB
+```
+
+These HugePages will be reserved for Oracle SGA memory allocation.
+
+#### Disable Swap Aggressiveness
+
+To prevent the database memory from being swapped to disk, reduce the Linux swappiness value.
+
+Edit system configuration:
+
+```bash
+nano /etc/sysctl.conf
+```
+
+Add:
+
+```text
+vm.swappiness = 1
+```
+
+Apply the configuration:
+
+```bash
+sysctl -p
+```
+
+This ensures the Oracle database prioritizes RAM usage instead of swapping memory to disk.
 
 ---
 
