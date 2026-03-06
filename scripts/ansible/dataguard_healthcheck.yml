@@ -1,0 +1,35 @@
+---
+- name: Data Guard Health Check and Alert
+  hosts: db_primary
+  become: true
+  vars:
+    oracle_env:
+      ORACLE_HOME: /u01/app/oracle/product/21c/dbhome_1
+      ORACLE_SID: PRIDB1
+      DG_CONNECT: "sys@pridb_sync"
+      WARN_LAG_SECONDS: "60"
+      CRIT_LAG_SECONDS: "300"
+    health_script: /u01/app/oracle/scripts/dataguard_health_check.sh
+
+  tasks:
+    - name: Ensure health-check script exists on host
+      copy:
+        src: ../dataguard_health_check.sh
+        dest: "{{ health_script }}"
+        mode: "0755"
+
+    - name: Run Data Guard health-check
+      shell: "{{ health_script }}"
+      environment: "{{ oracle_env }}"
+      register: dg_health
+      changed_when: false
+      failed_when: dg_health.rc == 2
+
+    - name: Print health-check output
+      debug:
+        msg: "{{ dg_health.stdout_lines }}"
+
+    - name: Send warning notification
+      when: dg_health.rc == 1
+      debug:
+        msg: "WARNING - Data Guard lag is above warning threshold. Integrate this step with Slack/Email/PagerDuty."
