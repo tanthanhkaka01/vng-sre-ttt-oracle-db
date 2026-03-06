@@ -615,7 +615,7 @@ nohup /u01/app/21c/grid/gridSetup.sh > /u01/app/21c/grid/grid_setup.log 2>&1 &
 
 ```text
 Cluster Name: rac
-SCAN Name: rac-scan.private.db.com
+SCAN Name: scan-db.company.local
 SCAN Port: 1521
 ```
 
