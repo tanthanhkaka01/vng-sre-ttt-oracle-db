@@ -55,9 +55,9 @@ Three ASM disk groups are used in the system.
 
 | Disk Group | Purpose                                        |
 | ---------- | ---------------------------------------------- |
-| +GRID      | Oracle Clusterware files (OCR and Voting Disk) |
+| +OCR      | Oracle Clusterware files (OCR and Voting Disk) |
 | +DATA      | Database datafiles and tempfiles               |
-| +RECO      | Redo logs, archive logs, and RMAN backups      |
+| +FRA      | Redo logs, archive logs, and RMAN backups      |
 
 Separating storage into these disk groups improves performance, manageability, and recovery operations.
 
@@ -68,7 +68,7 @@ Separating storage into these disk groups improves performance, manageability, a
 Example disk layout in ASM:
 
 ```text
-+GRID
++OCR
   OCR
   Voting Disk
 
@@ -77,14 +77,14 @@ Example disk layout in ASM:
   Tempfiles
   Controlfiles
 
-+RECO
++FRA
   Online Redo Logs
   Archive Logs
   RMAN Backups
   Flashback Logs
 ```
 
-The +RECO disk group acts as the Flash Recovery Area (FRA).
+The +FRA disk group acts as the Flash Recovery Area (FRA).
 
 ---
 
@@ -114,9 +114,9 @@ Recommended configuration for enterprise storage environments:
 
 | Disk Group | Redundancy |
 | ---------- | ---------- |
-| +GRID      | External   |
+| +OCR      | External   |
 | +DATA      | External   |
-| +RECO      | External   |
+| +FRA      | External   |
 
 External redundancy is used because redundancy is already provided by the SAN storage (RAID configuration).
 
