@@ -295,7 +295,4 @@ This approach provides predictable recovery operations and supports production-g
 ## Next Steps
 
 See:
-
-```text
-08-monitoring-and-observability.md
-```
+[08-monitoring-and-observability.md](./08-monitoring-and-observability.md)

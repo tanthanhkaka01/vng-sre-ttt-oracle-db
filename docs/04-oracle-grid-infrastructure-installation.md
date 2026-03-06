@@ -743,7 +743,4 @@ After completing these steps:
 ## Next Steps
 
 See:
-
-```text
-05-oracle-rac-database-installation.md
-```
+[05-oracle-rac-database-installation.md](./05-oracle-rac-database-installation.md)

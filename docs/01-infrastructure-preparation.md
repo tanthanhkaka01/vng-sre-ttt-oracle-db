@@ -220,7 +220,4 @@ Network Layer
 After completing the infrastructure preparation, the next step is to configure the network and DNS environment required for Oracle RAC and application connectivity.
 
 See:
-
-```text
-02-network-and-dns-configuration.md
-```
+[02-network-and-dns-configuration.md](./02-network-and-dns-configuration.md)

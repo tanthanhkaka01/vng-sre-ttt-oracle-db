@@ -345,7 +345,4 @@ This design supports high availability in primary and resilient disaster recover
 ## Next Steps
 
 See:
-
-```text
-07-backup-and-recovery-strategy.md
-```
+[07-backup-and-recovery-strategy.md](./07-backup-and-recovery-strategy.md)

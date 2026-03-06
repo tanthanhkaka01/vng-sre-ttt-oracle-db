@@ -342,7 +342,4 @@ This process supports production resilience and predictable recovery during majo
 ## Next Steps
 
 See:
-
-```text
-10-automation-strategy.md
-```
+[10-automation-strategy.md](./10-automation-strategy.md)
