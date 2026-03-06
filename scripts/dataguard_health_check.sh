@@ -18,7 +18,7 @@ export PATH="${ORACLE_HOME}/bin:${PATH}"
 to_seconds() {
   # Input format expected: +DD HH:MI:SS
   local in="$1"
-  if [[ -z "${in}" || "${in}" == "UNKNOWN" ]]; then
+  if [[ -z "${in}" ]] || [[ "${in^^}" == "UNKNOWN" ]]; then
     echo 999999
     return
   fi

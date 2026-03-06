@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <style>
+      .title { font: 700 28px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+      .sub { font: 600 22px "Segoe UI", Arial, sans-serif; fill: #1e293b; }
+      .text { font: 500 20px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 12; }
+      .label { font: 700 18px "Segoe UI", Arial, sans-serif; fill: #334155; }
+      .sync { font: 700 20px "Segoe UI", Arial, sans-serif; fill: #0f766e; }
+    </style>
+  </defs>
+
+  <text x="600" y="44" text-anchor="middle" class="title">Oracle RAC + Data Guard Topology</text>
+
+  <text x="250" y="90" text-anchor="middle" class="sub">Primary Site (DC1)</text>
+  <text x="950" y="90" text-anchor="middle" class="sub">DR Site (DC2)</text>
+
+  <rect x="80" y="120" width="340" height="220" class="box"/>
+  <text x="100" y="165" class="label">RAC: rac01, rac02</text>
+  <text x="100" y="205" class="text">DB_UNIQUE_NAME: pridb</text>
+  <text x="100" y="245" class="text">Role: PRIMARY</text>
+
+  <rect x="780" y="120" width="340" height="220" class="box"/>
+  <text x="800" y="165" class="label">RAC: rac03, rac04</text>
+  <text x="800" y="205" class="text">DB_UNIQUE_NAME: drdb</text>
+  <text x="800" y="245" class="text">Role: PHYSICAL STANDBY</text>
+
+  <line x1="430" y1="230" x2="770" y2="230" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="600" y="210" text-anchor="middle" class="sync">Data Guard SYNC</text>
+</svg>

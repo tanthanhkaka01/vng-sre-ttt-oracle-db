@@ -21,6 +21,9 @@ In this design:
 
 ## Data Guard Architecture
 
+![Data Guard Topology](../images/dataguard-topology.svg)
+*Figure: Primary and DR topology with Data Guard SYNC replication.*
+
 ```text
 Primary Site (DC1)                          DR Site (DC2)
 ------------------                          -------------

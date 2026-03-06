@@ -23,7 +23,7 @@
       environment: "{{ oracle_env }}"
       register: dg_health
       changed_when: false
-      failed_when: dg_health.rc == 2
+      failed_when: dg_health.rc not in [0, 1]
 
     - name: Print health-check output
       debug:

@@ -18,6 +18,9 @@ This runbook covers:
 
 ## DR Topology Summary
 
+![Data Guard Topology](../images/dataguard-topology.svg)
+*Figure: Primary and DR topology with Data Guard SYNC replication.*
+
 ```text
 Primary Site (DC1)
   RAC: rac01, rac02
