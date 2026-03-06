@@ -103,13 +103,33 @@ Design choice:
 
 Validation controls:
 
-- Daily `CROSSCHECK` and expired cleanup
-- Weekly `RESTORE DATABASE VALIDATE`
-- Monthly full restore drill in non-production
+- Every 15 minutes: verify backup freshness from monitoring (`last_successful_backup_age`)
+- Daily: `CROSSCHECK` and expired cleanup via RMAN automation
+- Weekly: deep validation with `RESTORE DATABASE VALIDATE`
+- Monthly: full restore drill in non-production
 
 Implementation artifact:
 
 - `scripts/rman_backup_validate.sh`
+
+Automation model (script + scheduler):
+
+- Script performs backup jobs and integrity checks with mode-aware validation
+- Cron triggers backup frequency by policy (L0/L1/ARCH)
+- Alert if no successful backup in 24h or if validation job fails
+
+Example cron:
+
+```bash
+# Weekly Level 0 (Sunday 01:00) with deep restore validation
+0 1 * * 0 RUN_RESTORE_VALIDATE=true /u01/app/oracle/scripts/rman_backup_validate.sh L0 >> /u01/app/oracle/log/rman_l0.log 2>&1
+
+# Daily Level 1 (Mon-Sat 01:00), no deep restore validate
+0 1 * * 1-6 RUN_RESTORE_VALIDATE=false /u01/app/oracle/scripts/rman_backup_validate.sh L1 >> /u01/app/oracle/log/rman_l1.log 2>&1
+
+# Archivelog backup every 15 minutes
+*/15 * * * * RUN_RESTORE_VALIDATE=false /u01/app/oracle/scripts/rman_backup_validate.sh ARCH >> /u01/app/oracle/log/rman_arch.log 2>&1
+```
 
 ---
 

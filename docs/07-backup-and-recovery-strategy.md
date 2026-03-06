@@ -255,15 +255,22 @@ Minimum alerts:
 ## Example Automation with Cron
 
 ```bash
-# Weekly Level 0 - Sunday 01:00
-0 1 * * 0 /u01/app/oracle/scripts/rman_l0.sh >> /u01/app/oracle/log/rman_l0.log 2>&1
+# Weekly Level 0 - Sunday 01:00 (with deep restore validation)
+0 1 * * 0 RUN_RESTORE_VALIDATE=true /u01/app/oracle/scripts/rman_backup_validate.sh L0 >> /u01/app/oracle/log/rman_l0.log 2>&1
 
 # Daily Level 1 - Monday to Saturday 01:00
-0 1 * * 1-6 /u01/app/oracle/scripts/rman_l1.sh >> /u01/app/oracle/log/rman_l1.log 2>&1
+0 1 * * 1-6 RUN_RESTORE_VALIDATE=false /u01/app/oracle/scripts/rman_backup_validate.sh L1 >> /u01/app/oracle/log/rman_l1.log 2>&1
 
-# Archivelog backup every 30 minutes
-*/30 * * * * /u01/app/oracle/scripts/rman_arch.sh >> /u01/app/oracle/log/rman_arch.log 2>&1
+# Archivelog backup every 15 minutes
+*/15 * * * * RUN_RESTORE_VALIDATE=false /u01/app/oracle/scripts/rman_backup_validate.sh ARCH >> /u01/app/oracle/log/rman_arch.log 2>&1
 ```
+
+Recommended backup validation automation:
+
+- Every 15 minutes: monitor backup freshness and alerting signals
+- Daily: RMAN `CROSSCHECK` + expired cleanup (included in script)
+- Weekly: `RESTORE DATABASE VALIDATE` (`RUN_RESTORE_VALIDATE=true`)
+- Monthly: full restore drill in non-production
 
 ---
 
