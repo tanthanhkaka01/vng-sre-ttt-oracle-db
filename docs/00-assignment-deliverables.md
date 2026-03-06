@@ -169,16 +169,43 @@ Implementation artifact:
 
 ### C3. Slow query and error logging strategy
 
-Logging approach:
+In Oracle, "slow query log" is implemented through performance views and workload repositories:
 
-- Centralize alert log, listener log, CRS/ASM logs, RMAN logs, OS logs
-- Parse and index ORA errors and long-running SQL events
-- Keep 30-90 days hot searchable logs, 6-12 months archive retention
+- Slow SQL sources: `GV$SQLSTATS`, `GV$ACTIVE_SESSION_HISTORY`, AWR reports (`DBA_HIST_SQLSTAT`)
+- Error log sources: database alert log, listener log, CRS/ASM logs, RMAN logs
 
-Operational use:
+Collection and retention policy:
 
-- Correlate logs with metrics by host, DB unique name, and timestamp
-- Feed top SQL and repeated error patterns into performance tuning backlog
+- Ship all logs to central store (ELK/OpenSearch/Splunk) with tags: `db_unique_name`, `instance`, `host`, `service`
+- Hot searchable retention: 30-90 days
+- Archived retention (audit/forensics): 6-12 months
+
+Detection rules for performance optimization:
+
+- Slow SQL candidate: p95 execution time above workload baseline for 15 minutes
+- Regression candidate: same `SQL_ID` latency increases > 2x week-over-week
+- Error hotspot: repeated `ORA-` pattern above defined threshold per 5 minutes
+
+Operational optimization workflow:
+
+1. Detect top slow `SQL_ID` from `GV$SQLSTATS`/AWR
+2. Correlate with wait events (`db file sequential read`, `log file sync`, etc.)
+3. Validate execution plan change and index/statistics status
+4. Apply fix (index/statistics/SQL rewrite/plan baseline)
+5. Track p95/p99 improvement after change window and close incident/problem record
+
+Example SQL for slow SQL extraction:
+
+```sql
+SELECT sql_id,
+       ROUND(elapsed_time/1e6,2) AS elapsed_sec_total,
+       executions,
+       ROUND((elapsed_time/DECODE(executions,0,1,executions))/1e3,2) AS avg_elapsed_ms
+FROM gv$sqlstats
+WHERE executions > 0
+ORDER BY (elapsed_time/DECODE(executions,0,1,executions)) DESC
+FETCH FIRST 20 ROWS ONLY;
+```
 
 ---
 
