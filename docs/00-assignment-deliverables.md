@@ -190,6 +190,17 @@ Service-level targets:
 - Connection latency p95: **< 500 ms** (in normal operating window)
 - Query latency p95: baseline per critical transaction class
 
+SLA commitments:
+
+- Monthly service availability SLA: **99.95%**
+- Credit/penalty policy is triggered if monthly availability is below SLA threshold
+- Planned maintenance windows are pre-approved and excluded from SLA calculation
+
+RTO/RPO definitions:
+
+- RTO (Recovery Time Objective): maximum acceptable time to restore service after disruption
+- RPO (Recovery Point Objective): maximum acceptable data loss measured in time
+
 Recovery objectives by scenario:
 
 | Scenario | RTO | RPO |
