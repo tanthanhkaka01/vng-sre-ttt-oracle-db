@@ -628,10 +628,12 @@ Public hostname: rac02    Virtual hostname: rac02-vip
 
 #### 14.3. Network Interfaces
 
-| Interface | Purpose       |
-| --------- | ------------- |
-| enp0s3    | Public        |
-| enp0s8    | Private / ASM |
+| Interface | Network Type | Example Subnet | Purpose |
+|-----------|-------------|---------------|---------|
+| enp0s3 | Public Network | 192.168.10.0/24 | Client database connections |
+| enp0s8 | Private Interconnect | 192.168.20.0/24 | RAC Cache Fusion communication |
+
+> The private interconnect network is used by Oracle RAC instances for **Cache Fusion** traffic and should be configured with low latency and high bandwidth.
 
 #### 14.4. ASM Disk Group
 
