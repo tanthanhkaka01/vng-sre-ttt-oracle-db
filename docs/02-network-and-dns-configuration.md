@@ -147,14 +147,14 @@ This abstraction layer allows database failover without changing application con
 When a disaster recovery failover occurs, the DNS mapping is updated to point to the DR cluster endpoint:
 
 ```text
-db.company.local → dr-db.company.local
+db.company.local → scan-standby.company.local
 ```
 
 Example DR SCAN mapping:
 ```
-dr-db.company.local → 192.168.110.101
-dr-db.company.local → 192.168.110.102
-dr-db.company.local → 192.168.110.103
+scan-standby.company.local → 192.168.110.101
+scan-standby.company.local → 192.168.110.102
+scan-standby.company.local → 192.168.110.103
 ```
 
 Because the DNS record uses a short TTL value, applications will automatically reconnect to the DR database cluster after the DNS update.
