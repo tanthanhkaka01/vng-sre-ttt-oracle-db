@@ -94,15 +94,15 @@ Shared disks are provisioned from the SAN storage as LUNs and presented to all R
 
 Example LUN allocation:
 
-| LUN Name | Size   | Usage                |
-| -------- | ------ | -------------------- |
-| LUN_DATA | 10 TB  | ASM +DATA disk group |
-| LUN_FRA  | 6 TB   | ASM +RECO disk group |
-| LUN_OCR1 | 200 GB | ASM +GRID disk group |
-| LUN_OCR2 | 200 GB | ASM +GRID disk group |
-| LUN_OCR3 | 200 GB | ASM +GRID disk group |
+| LUN Name | Size | Usage |
+|----------|------|------|
+| LUN_DATA | 10 TB | ASM `+DATA` disk group |
+| LUN_FRA  | 6 TB  | ASM `+FRA` disk group |
+| LUN_OCR1 | 200 GB | ASM `+OCR` disk group |
+| LUN_OCR2 | 200 GB | ASM `+OCR` disk group |
+| LUN_OCR3 | 200 GB | ASM `+OCR` disk group |
 
-Multiple disks are used in the +GRID disk group to ensure cluster metadata redundancy.
+Multiple disks are used in the +OCR disk group to ensure cluster metadata redundancy.
 
 ---
 

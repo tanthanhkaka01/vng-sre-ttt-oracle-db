@@ -227,10 +227,10 @@ Create the following LUNs on the SAN storage system.
 | LUN Name | Size | Usage |
 |----------|------|------|
 | LUN_DATA | 10 TB | ASM `+DATA` disk group |
-| LUN_FRA  | 6 TB  | ASM `+RECO` disk group |
-| LUN_OCR1 | 200 GB | ASM `+GRID` disk group |
-| LUN_OCR2 | 200 GB | ASM `+GRID` disk group |
-| LUN_OCR3 | 200 GB | ASM `+GRID` disk group |
+| LUN_FRA  | 6 TB  | ASM `+FRA` disk group |
+| LUN_OCR1 | 200 GB | ASM `+OCR` disk group |
+| LUN_OCR2 | 200 GB | ASM `+OCR` disk group |
+| LUN_OCR3 | 200 GB | ASM `+OCR` disk group |
 
 The LUNs must be presented to **both RAC nodes** using the SAN storage system.
 
@@ -534,7 +534,7 @@ Destination:
 
 ---
 
-### 11. Install Oracle Grid Infrastructure
+### 11. Extract Oracle Grid zip
 
 Login as grid user:
 
@@ -542,7 +542,7 @@ Login as grid user:
 su - grid
 ```
 
-Extract Grid software:
+Extract Oracle Grid Infrastructure installation files:
 
 ```bash
 unzip /u01/app/grid_install/LINUX.X64_213000_grid_home.zip -d /u01/app/21c/grid
@@ -622,8 +622,8 @@ SCAN Port: 1521
 #### 14.2. Add Nodes
 
 ```text
-rac01
-rac02
+Public hostname: rac01    Virtual hostname: rac01-vip
+Public hostname: rac02    Virtual hostname: rac02-vip
 ```
 
 #### 14.3. Network Interfaces
