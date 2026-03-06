@@ -75,6 +75,7 @@ The following diagram summarizes the high-level architecture and data flow betwe
 The detailed technical design and implementation documentation
 is organized in the /docs directory.
 
+- 00-assignment-deliverables.md
 - 01-infrastructure-preparation.md
 - 02-network-and-dns-configuration.md
 - 03-shared-storage-and-asm-disks.md
