@@ -45,6 +45,9 @@ For RAC:
 
 ## Backup Architecture
 
+![Backup Architecture](../images/backup-architecture.svg)
+*Figure: RMAN backup flow from primary/standby RAC to external backup storage.*
+
 ```text
 Primary RAC (pridb) ------------------------> Backup Storage (NFS/Object/Appliance)
       |                                                   ^

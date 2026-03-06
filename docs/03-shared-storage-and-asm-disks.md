@@ -26,6 +26,9 @@ Each datacenter has its own independent storage system.
 
 This separation ensures that a storage failure in the primary datacenter does not affect the DR environment.
 
+![Shared Storage Architecture](../images/shared-storage-architecture.svg)
+*Figure: Independent SAN storage domains for primary and DR RAC clusters.*
+
 ```text
                  Primary Datacenter
                  -------------------

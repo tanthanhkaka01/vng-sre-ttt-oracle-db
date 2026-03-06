@@ -206,6 +206,9 @@ Redo transport typically occurs over the client access network or a dedicated re
 
 Example communication flow:
 
+![Network Connectivity](../images/network-connectivity.svg)
+*Figure: Primary-to-standby network connectivity and Data Guard transport path.*
+
 ```text
 Primary RAC (192.168.10.x)
         ↓
@@ -335,3 +338,4 @@ See:
 ```text
 03-shared-storage-and-asm-disks.md
 ```
+

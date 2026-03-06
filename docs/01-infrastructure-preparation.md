@@ -151,6 +151,10 @@ This layout ensures separation of database data, recovery files, and cluster met
 ## Node Distribution
 
 The nodes are distributed across two datacenters to ensure disaster recovery capability.
+
+![Infrastructure Topology](../images/infrastructure-topology.svg)
+*Figure: Two-datacenter infrastructure with primary and DR RAC node distribution.*
+
 ```text
 Primary Datacenter:
 rac-node1

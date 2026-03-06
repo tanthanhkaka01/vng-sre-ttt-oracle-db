@@ -44,6 +44,9 @@ Oracle Grid Infrastructure includes the following major components:
 
 In this architecture:
 
+![Grid RAC Architecture](../images/grid-rac-architecture.svg)
+*Figure: Application entry through SCAN to RAC nodes over shared ASM storage.*
+
 ```text
 Application
      |

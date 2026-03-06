@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">
+  <style>
+    .title { font: 700 28px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+    .text { font: 600 18px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 10; }
+    .line { stroke: #334155; stroke-width: 2; }
+  </style>
+  <text x="600" y="40" text-anchor="middle" class="title">DR Orchestration Flow</text>
+  <rect x="430" y="70" width="340" height="52" class="box"/><text x="600" y="103" text-anchor="middle" class="text">Trigger (Incident or Drill)</text>
+  <line x1="600" y1="122" x2="600" y2="145" class="line"/>
+  <rect x="470" y="145" width="260" height="52" class="box"/><text x="600" y="178" text-anchor="middle" class="text">Run Prechecks</text>
+  <line x1="600" y1="197" x2="600" y2="220" class="line"/>
+  <rect x="470" y="220" width="260" height="52" class="box"/><text x="600" y="253" text-anchor="middle" class="text">Approval Gate</text>
+  <line x1="600" y1="272" x2="600" y2="295" class="line"/>
+  <rect x="390" y="295" width="420" height="52" class="box"/><text x="600" y="328" text-anchor="middle" class="text">Execute Role Transition (DGMGRL)</text>
+  <line x1="600" y1="347" x2="600" y2="370" class="line"/>
+  <rect x="440" y="370" width="320" height="52" class="box"/><text x="600" y="403" text-anchor="middle" class="text">Update DNS Endpoint</text>
+  <line x1="600" y1="422" x2="600" y2="445" class="line"/>
+  <rect x="460" y="445" width="280" height="52" class="box"/><text x="600" y="478" text-anchor="middle" class="text">Run Smoke Tests</text>
+</svg>

@@ -45,6 +45,9 @@ Automation in this architecture follows these principles:
 
 ## Automation Architecture
 
+![Automation Architecture](../images/automation-architecture.svg)
+*Figure: GitOps pipeline feeding Ansible/Terraform execution domains.*
+
 ```text
 Git Repository (IaC + Runbooks + Scripts)
                 |
@@ -181,6 +184,9 @@ Keep manual approval for:
 ---
 
 ## Example DR Orchestration Flow
+
+![DR Orchestration Flow](../images/dr-orchestration-flow.svg)
+*Figure: Controlled role transition workflow for DR events and drills.*
 
 ```text
 Trigger (Incident or Drill)

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+  </defs>
+  <style>
+    .title { font: 700 28px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+    .text { font: 500 18px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+    .sub { font: 700 20px "Segoe UI", Arial, sans-serif; fill: #1e293b; }
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 12; }
+  </style>
+  <text x="600" y="42" text-anchor="middle" class="title">Network Connectivity and DR Flow</text>
+  <rect x="90" y="120" width="360" height="180" class="box"/>
+  <text x="270" y="165" text-anchor="middle" class="sub">Primary RAC</text>
+  <text x="120" y="205" class="text">Public: 192.168.10.x</text>
+  <text x="120" y="240" class="text">SCAN: scan-db.company.local</text>
+  <rect x="750" y="120" width="360" height="180" class="box"/>
+  <text x="930" y="165" text-anchor="middle" class="sub">Standby RAC</text>
+  <text x="780" y="205" class="text">Public: 192.168.110.x</text>
+  <text x="780" y="240" class="text">SCAN: scan-standby.company.local</text>
+  <line x1="460" y1="205" x2="740" y2="205" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="600" y="188" text-anchor="middle" class="text">Data Guard Redo Transport</text>
+  <text x="600" y="350" text-anchor="middle" class="text">Application endpoint: db.company.local (TTL 30s)</text>
+</svg>

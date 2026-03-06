@@ -38,6 +38,9 @@ The platform must monitor the following layers:
 
 ## Observability Architecture
 
+![Observability Architecture](../images/observability-architecture.svg)
+*Figure: Metrics and alerting pipeline from DB nodes to on-call responders.*
+
 ```text
 RAC/DB Nodes + DR Nodes
        |
@@ -53,6 +56,9 @@ Ops/SRE On-call
 ```
 
 For logs:
+
+![Logging Pipeline](../images/logging-pipeline.svg)
+*Figure: Centralized log collection and investigation flow.*
 
 ```text
 DB Alert Logs / Listener Logs / OS Logs

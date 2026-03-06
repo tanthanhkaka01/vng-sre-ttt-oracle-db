@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430">
+  <style>
+    .title { font: 700 28px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+    .text { font: 600 18px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 10; }
+    .line { stroke: #334155; stroke-width: 2; }
+  </style>
+  <text x="600" y="42" text-anchor="middle" class="title">Automation Architecture</text>
+  <rect x="360" y="70" width="480" height="55" class="box"/><text x="600" y="104" text-anchor="middle" class="text">Git Repository (IaC + Runbooks + Scripts)</text>
+  <line x1="600" y1="125" x2="600" y2="150" class="line"/>
+  <rect x="470" y="150" width="260" height="55" class="box"/><text x="600" y="184" text-anchor="middle" class="text">CI/CD Pipeline</text>
+  <line x1="600" y1="205" x2="420" y2="240" class="line"/>
+  <line x1="600" y1="205" x2="780" y2="240" class="line"/>
+  <rect x="260" y="240" width="320" height="60" class="box"/><text x="420" y="278" text-anchor="middle" class="text">Ansible Control Node</text>
+  <rect x="620" y="240" width="320" height="60" class="box"/><text x="780" y="278" text-anchor="middle" class="text">Terraform Runner</text>
+  <line x1="420" y1="300" x2="420" y2="325" class="line"/>
+  <line x1="780" y1="300" x2="780" y2="325" class="line"/>
+  <rect x="180" y="325" width="480" height="60" class="box"/><text x="420" y="362" text-anchor="middle" class="text">Primary RAC + DR RAC</text>
+  <rect x="700" y="325" width="320" height="60" class="box"/><text x="860" y="362" text-anchor="middle" class="text">Infra Resources</text>
+</svg>

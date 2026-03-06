@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="430" viewBox="0 0 1200 430">
+  <style>
+    .title { font: 700 28px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+    .sub { font: 700 20px "Segoe UI", Arial, sans-serif; fill: #1e293b; }
+    .text { font: 500 17px "Segoe UI", Arial, sans-serif; fill: #0f172a; }
+    .box { fill: #f8fafc; stroke: #334155; stroke-width: 2; rx: 12; }
+  </style>
+  <text x="600" y="42" text-anchor="middle" class="title">Shared Storage Architecture per Datacenter</text>
+  <rect x="70" y="90" width="500" height="300" class="box"/>
+  <text x="320" y="130" text-anchor="middle" class="sub">Primary Datacenter</text>
+  <text x="120" y="180" class="text">SAN Storage</text>
+  <text x="120" y="220" class="text">Connected to RAC Node 1 and RAC Node 2</text>
+  <text x="120" y="260" class="text">ASM groups: +OCR, +DATA, +FRA</text>
+  <rect x="630" y="90" width="500" height="300" class="box"/>
+  <text x="880" y="130" text-anchor="middle" class="sub">DR Datacenter</text>
+  <text x="680" y="180" class="text">Independent SAN Storage</text>
+  <text x="680" y="220" class="text">Connected to RAC Node 3 and RAC Node 4</text>
+  <text x="680" y="260" class="text">ASM groups: +OCR, +DATA, +FRA</text>
+  <text x="600" y="410" text-anchor="middle" class="text">Cross-DC sync handled by Data Guard, not shared storage replication</text>
+</svg>
