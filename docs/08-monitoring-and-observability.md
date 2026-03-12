@@ -67,8 +67,49 @@ DB Alert Logs / Listener Logs / OS Logs
        |
  Central Log Store (ELK / OpenSearch / Splunk)
        |
- Dashboards + Search + Incident Investigation
+Dashboards + Search + Incident Investigation
 ```
+
+---
+
+## Recommended Tooling
+
+To avoid ambiguity, use the following as the baseline recommendation for this project:
+
+### Option A (Default, recommended for most teams)
+
+- Metrics: Prometheus
+- Visualization: Grafana
+- Alerting: Alertmanager
+- Host metrics agent: Node Exporter
+- Oracle DB metrics agent: Oracle exporter (for example `oracledb_exporter`)
+- Endpoint checks: Blackbox Exporter (DB listener/connectivity probes)
+- Log shipping: Fluent Bit
+- Log storage/search: OpenSearch
+
+Why this option:
+
+- Open-source and cost-efficient
+- Flexible dashboards and alert routing
+- Easy integration with Slack/Email/PagerDuty
+
+### Option B (Enterprise Oracle-first)
+
+- Oracle-level monitoring and alerting: Oracle Enterprise Manager (OEM)
+- Centralized log platform: Splunk or ELK/OpenSearch
+- Optional service dashboards: Grafana
+
+Why this option:
+
+- Strong Oracle-native visibility (RAC, ASM, Data Guard, RMAN)
+- Better fit for organizations already using Oracle enterprise tooling
+
+### Tooling Decision for This Document
+
+Unless there is a separate enterprise tooling mandate, standardize on:
+
+- `Prometheus + Grafana + Alertmanager` for metrics and alerts
+- `Fluent Bit + OpenSearch` for logs
 
 ---
 
