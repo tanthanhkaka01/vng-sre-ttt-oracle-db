@@ -1,0 +1,16 @@
+stages:
+  - deploy
+
+deploy_prod:
+  stage: deploy
+  when: manual
+  script:
+    - terraform -chdir=automation/terraform/environments/prod apply -auto-approve
+    - ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/site.yml
+
+deploy_dr:
+  stage: deploy
+  when: manual
+  script:
+    - terraform -chdir=automation/terraform/environments/dr apply -auto-approve
+    - ansible-playbook -i automation/ansible/inventories/dr/hosts.yml automation/ansible/playbooks/site.yml

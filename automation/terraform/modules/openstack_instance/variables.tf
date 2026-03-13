@@ -1,0 +1,15 @@
+variable "instance_name" { type = string }
+variable "image_name" { type = string }
+variable "flavor_name" { type = string }
+variable "keypair" { type = string }
+variable "security_groups" { type = list(string) }
+variable "cloud_init" { type = string }
+variable "public_network_id" { type = string }
+variable "public_subnet_id" { type = string }
+variable "public_ip" { type = string }
+variable "private_network_id" { type = string }
+variable "private_subnet_id" { type = string }
+variable "private_ip" { type = string }
+variable "management_network_id" { type = string }
+variable "management_subnet_id" { type = string }
+variable "management_ip" { type = string }

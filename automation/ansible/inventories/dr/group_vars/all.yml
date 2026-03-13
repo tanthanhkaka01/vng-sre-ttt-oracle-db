@@ -1,0 +1,25 @@
+ansible_user: ansible
+ansible_become: true
+dns_servers:
+  - 192.168.110.53
+  - 192.168.110.54
+oracle_groups:
+  - { name: "oinstall", gid: 1001 }
+  - { name: "dba", gid: 1002 }
+  - { name: "asmadmin", gid: 1003 }
+oracle_users:
+  - { name: "grid", uid: 1101, groups: "asmadmin,dba" }
+  - { name: "oracle", uid: 1102, groups: "dba" }
+oracle_directories:
+  - /u01/app
+  - /u01/app/grid
+  - /u01/app/oracle
+  - /u01/stage
+oracle_required_packages:
+  - chrony
+  - unzip
+  - kmod
+  - libaio
+  - python3
+scan_name: scan-standby.company.local
+db_service_name: db.company.local

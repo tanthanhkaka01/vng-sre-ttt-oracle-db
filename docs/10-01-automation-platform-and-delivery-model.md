@@ -105,6 +105,186 @@ Recommended separation:
 
 ---
 
+## Prerequisites for Freshers
+
+Before running any automation, prepare the following:
+
+1. Access to Git repository with read and write permission
+2. Access to CI/CD platform with permission to run pipelines
+3. Service account for vCenter or OpenStack API
+4. Service account for DNS automation
+5. SSH private key for Ansible control node
+6. Secret manager path for storing API and SSH credentials
+
+Minimum workstation tools:
+
+```bash
+git --version
+terraform version
+ansible --version
+python3 --version
+```
+
+If any command is missing, install it before continuing.
+
+---
+
+## Step-by-Step Delivery Flow
+
+Use this sequence for every production change:
+
+1. Create a feature branch from `main`
+2. Update variables or modules in the relevant automation folder
+3. Run validation locally
+4. Commit code with a change reference
+5. Open a pull request
+6. Wait for review and pipeline validation
+7. Approve and execute the production pipeline
+8. Archive output logs and screenshots
+
+Example:
+
+```bash
+git checkout -b feature/prod-rac-node-build
+terraform -chdir=automation/terraform/environments/prod fmt -recursive
+terraform -chdir=automation/terraform/environments/prod validate
+ansible-lint automation/ansible
+git add .
+git commit -m "CHG-20260313 add prod RAC node build automation"
+git push origin feature/prod-rac-node-build
+```
+
+---
+
+## Recommended Repository Layout with Real Files
+
+```text
+automation/
+  terraform/
+    modules/
+      vmware_vm/
+        main.tf
+        variables.tf
+        outputs.tf
+      openstack_instance/
+        main.tf
+        variables.tf
+        outputs.tf
+      dns_records/
+        main.tf
+        variables.tf
+    environments/
+      prod/
+        main.tf
+        providers.tf
+        variables.tf
+        terraform.tfvars
+      dr/
+        main.tf
+        providers.tf
+        variables.tf
+        terraform.tfvars
+  ansible/
+    inventories/
+      prod/
+        hosts.yml
+        group_vars/
+          all.yml
+      dr/
+        hosts.yml
+        group_vars/
+          all.yml
+    roles/
+      network_baseline/
+      dns_validation/
+      oracle_prereq/
+    playbooks/
+      site.yml
+      network.yml
+      os-baseline.yml
+      dns-validate.yml
+```
+
+This layout is simple enough for junior engineers and still production-safe.
+
+---
+
+## Example CI Pipeline
+
+Example `pipelines/validate.yml`:
+
+```yaml
+stages:
+  - validate
+  - plan
+
+terraform_validate:
+  stage: validate
+  script:
+    - terraform -chdir=automation/terraform/environments/prod init -backend=false
+    - terraform -chdir=automation/terraform/environments/prod fmt -check
+    - terraform -chdir=automation/terraform/environments/prod validate
+
+ansible_validate:
+  stage: validate
+  script:
+    - ansible-lint automation/ansible
+
+terraform_plan_prod:
+  stage: plan
+  script:
+    - terraform -chdir=automation/terraform/environments/prod init
+    - terraform -chdir=automation/terraform/environments/prod plan -out=tfplan
+  artifacts:
+    paths:
+      - automation/terraform/environments/prod/tfplan
+```
+
+Example `pipelines/deploy.yml`:
+
+```yaml
+stages:
+  - deploy
+
+deploy_prod:
+  stage: deploy
+  when: manual
+  script:
+    - terraform -chdir=automation/terraform/environments/prod apply -auto-approve tfplan
+    - ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/site.yml
+```
+
+---
+
+## Local Runbook for Engineers
+
+If the pipeline runner is not yet available, use this order on the automation control host:
+
+1. Pull latest code
+2. Export required credentials from secret manager
+3. Run Terraform `init`
+4. Run Terraform `plan`
+5. Review the diff with a reviewer
+6. Run Terraform `apply`
+7. Run Ansible baseline playbooks
+8. Save output under a dated change folder
+
+Example:
+
+```bash
+export TF_VAR_vcenter_server="vcsa01.company.local"
+export TF_VAR_vcenter_user="svc_terraform@vsphere.local"
+export TF_VAR_vcenter_password="$(pass show infra/vcenter)"
+export ANSIBLE_HOST_KEY_CHECKING=False
+
+terraform -chdir=automation/terraform/environments/prod init
+terraform -chdir=automation/terraform/environments/prod plan -out=tfplan
+terraform -chdir=automation/terraform/environments/prod apply tfplan
+ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/site.yml
+```
+
+---
+
 ## Environment Promotion
 
 Promotion order:
@@ -159,6 +339,23 @@ Each automation domain must have:
 - Pre-change snapshot or export
 - Clear owner for rollback decision
 - Maximum rollback execution time target
+
+Practical rollback for freshers:
+
+1. Stop the active pipeline
+2. Revert the last merged change in Git
+3. Re-run validation
+4. Re-apply the last known-good state
+5. Confirm environment health before closing the ticket
+
+Example:
+
+```bash
+git revert <commit_id>
+git push origin main
+terraform -chdir=automation/terraform/environments/prod plan
+ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/site.yml
+```
 
 ---
 

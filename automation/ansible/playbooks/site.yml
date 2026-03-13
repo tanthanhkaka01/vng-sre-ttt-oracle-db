@@ -1,0 +1,9 @@
+- name: Apply site baseline
+  hosts: all
+  become: true
+  roles:
+    - os_bootstrap
+    - network_baseline
+    - oracle_prereq
+    - grid_prep
+    - dns_validation

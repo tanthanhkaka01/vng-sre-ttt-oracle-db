@@ -1,0 +1,31 @@
+- name: Install Oracle prerequisite packages
+  ansible.builtin.package:
+    name: "{{ oracle_required_packages }}"
+    state: present
+
+- name: Create Oracle groups
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid }}"
+    state: present
+  loop: "{{ oracle_groups }}"
+
+- name: Create Oracle users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
+    group: oinstall
+    groups: "{{ item.groups }}"
+    append: true
+    shell: /bin/bash
+    state: present
+  loop: "{{ oracle_users }}"
+
+- name: Create Oracle directory structure
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: oracle
+    group: oinstall
+    mode: "0775"
+  loop: "{{ oracle_directories }}"

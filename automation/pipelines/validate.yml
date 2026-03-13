@@ -1,0 +1,35 @@
+stages:
+  - validate
+  - plan
+
+terraform_validate_prod:
+  stage: validate
+  script:
+    - terraform -chdir=automation/terraform/environments/prod init -backend=false
+    - terraform -chdir=automation/terraform/environments/prod fmt -check
+    - terraform -chdir=automation/terraform/environments/prod validate
+
+terraform_validate_dr:
+  stage: validate
+  script:
+    - terraform -chdir=automation/terraform/environments/dr init -backend=false
+    - terraform -chdir=automation/terraform/environments/dr fmt -check
+    - terraform -chdir=automation/terraform/environments/dr validate
+
+ansible_validate:
+  stage: validate
+  script:
+    - ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/bootstrap-validate.yml --syntax-check
+    - ansible-playbook -i automation/ansible/inventories/dr/hosts.yml automation/ansible/playbooks/bootstrap-validate.yml --syntax-check
+
+terraform_plan_prod:
+  stage: plan
+  script:
+    - Copy-Item automation/terraform/environments/prod/terraform.tfvars.example automation/terraform/environments/prod/terraform.tfvars
+    - terraform -chdir=automation/terraform/environments/prod plan
+
+terraform_plan_dr:
+  stage: plan
+  script:
+    - Copy-Item automation/terraform/environments/dr/terraform.tfvars.example automation/terraform/environments/dr/terraform.tfvars
+    - terraform -chdir=automation/terraform/environments/dr plan

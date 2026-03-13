@@ -1,0 +1,17 @@
+- name: Validate SCAN name resolution
+  ansible.builtin.command: "getent hosts {{ scan_name }}"
+  register: scan_lookup
+  changed_when: false
+
+- name: Show SCAN lookup
+  ansible.builtin.debug:
+    var: scan_lookup.stdout_lines
+
+- name: Validate DB service resolution
+  ansible.builtin.command: "getent hosts {{ db_service_name }}"
+  register: db_lookup
+  changed_when: false
+
+- name: Show DB service lookup
+  ansible.builtin.debug:
+    var: db_lookup.stdout_lines

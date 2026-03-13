@@ -1,0 +1,5 @@
+- name: Configure network baseline
+  hosts: all
+  become: true
+  roles:
+    - network_baseline

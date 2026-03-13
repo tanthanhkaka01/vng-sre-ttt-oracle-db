@@ -1,0 +1,14 @@
+- name: Gather package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Ensure chronyd is installed
+  ansible.builtin.package:
+    name: chrony
+    state: present
+
+- name: Ensure chronyd is enabled
+  ansible.builtin.service:
+    name: chronyd
+    enabled: true
+    state: started

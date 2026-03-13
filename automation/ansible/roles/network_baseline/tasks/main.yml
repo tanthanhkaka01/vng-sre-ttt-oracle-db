@@ -1,0 +1,29 @@
+- name: Configure public interface
+  community.general.nmcli:
+    conn_name: "{{ public_if }}"
+    ifname: "{{ public_if }}"
+    type: ethernet
+    ip4: "{{ public_ip }}/{{ public_prefix }}"
+    gw4: "{{ public_gw }}"
+    dns4: "{{ dns_servers }}"
+    state: present
+
+- name: Configure private interface
+  community.general.nmcli:
+    conn_name: "{{ private_if }}"
+    ifname: "{{ private_if }}"
+    type: ethernet
+    ip4: "{{ private_ip }}/{{ private_prefix }}"
+    state: present
+
+- name: Configure management interface
+  community.general.nmcli:
+    conn_name: "{{ management_if }}"
+    ifname: "{{ management_if }}"
+    type: ethernet
+    ip4: "{{ management_ip }}/{{ management_prefix }}"
+    state: present
+
+- name: Reload NetworkManager connections
+  ansible.builtin.command: nmcli connection reload
+  changed_when: true

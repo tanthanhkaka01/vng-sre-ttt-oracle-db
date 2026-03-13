@@ -1,0 +1,21 @@
+- name: Validate host bootstrap
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Verify hostname
+      ansible.builtin.command: hostnamectl --static
+      register: hostname_out
+      changed_when: false
+
+    - name: Show hostname
+      ansible.builtin.debug:
+        var: hostname_out.stdout
+
+    - name: Verify default route
+      ansible.builtin.command: ip route show default
+      register: route_out
+      changed_when: false
+
+    - name: Show default route
+      ansible.builtin.debug:
+        var: route_out.stdout

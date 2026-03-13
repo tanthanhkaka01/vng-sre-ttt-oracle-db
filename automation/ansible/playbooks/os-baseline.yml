@@ -1,0 +1,7 @@
+- name: Apply Oracle OS baseline
+  hosts: all
+  become: true
+  roles:
+    - os_bootstrap
+    - oracle_prereq
+    - grid_prep

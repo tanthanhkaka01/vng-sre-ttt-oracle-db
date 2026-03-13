@@ -51,6 +51,47 @@ All inputs should be stored as code in environment variable files.
 
 ---
 
+## Prerequisites
+
+Before starting, prepare:
+
+1. Approved Oracle Linux template or image
+2. vCenter or OpenStack credentials
+3. IP plan for public, interconnect, and management networks
+4. DNS names reserved for each node
+5. SSH public key for automation account
+6. Ansible control node reachable from target networks
+
+Junior engineers should not start a build until all six items are confirmed.
+
+---
+
+## Step-by-Step Provisioning for Freshers
+
+Use this exact sequence:
+
+1. Confirm the node list and IP plan
+2. Create or update the Terraform variable file
+3. Run `terraform init`
+4. Run `terraform plan` and check CPU, RAM, disk, and NIC count
+5. Run `terraform apply`
+6. Wait until the host is reachable by SSH
+7. Run a bootstrap validation playbook
+8. Record the output in the change ticket
+
+Example checklist:
+
+```text
+[ ] Hostname confirmed
+[ ] Public IP confirmed
+[ ] Interconnect IP confirmed
+[ ] Management IP confirmed
+[ ] Template or image version confirmed
+[ ] SSH key confirmed
+```
+
+---
+
 ## VMware Automation Flow
 
 ```text
@@ -73,6 +114,84 @@ Recommended controls:
 
 ---
 
+## Example VMware Terraform Code
+
+Example `automation/terraform/modules/vmware_vm/main.tf`:
+
+```hcl
+resource "vsphere_virtual_machine" "rac_vm" {
+  name             = var.vm_name
+  folder           = var.vm_folder
+  num_cpus         = var.num_cpus
+  memory           = var.memory_mb
+  datastore_id     = var.datastore_id
+  resource_pool_id = var.resource_pool_id
+  guest_id         = var.guest_id
+
+  network_interface {
+    network_id   = var.public_network_id
+    adapter_type = "vmxnet3"
+  }
+
+  network_interface {
+    network_id   = var.private_network_id
+    adapter_type = "vmxnet3"
+  }
+
+  network_interface {
+    network_id   = var.management_network_id
+    adapter_type = "vmxnet3"
+  }
+
+  disk {
+    label            = "system-disk"
+    size             = var.system_disk_gb
+    thin_provisioned = true
+  }
+
+  clone {
+    template_uuid = var.template_uuid
+    customize {
+      linux_options {
+        host_name = var.short_hostname
+        domain    = var.domain
+      }
+
+      network_interface {
+        ipv4_address = var.public_ip
+        ipv4_netmask = var.public_netmask
+      }
+
+      ipv4_gateway = var.public_gateway
+    }
+  }
+}
+```
+
+Example `terraform.tfvars`:
+
+```hcl
+vm_name               = "rac-node1.company.local"
+short_hostname        = "rac-node1"
+domain                = "company.local"
+num_cpus              = 32
+memory_mb             = 131072
+system_disk_gb        = 1024
+public_ip             = "192.168.10.11"
+public_netmask        = 24
+public_gateway        = "192.168.10.1"
+```
+
+Run:
+
+```bash
+terraform -chdir=automation/terraform/environments/prod init
+terraform -chdir=automation/terraform/environments/prod plan -target=module.rac_node1
+terraform -chdir=automation/terraform/environments/prod apply -target=module.rac_node1
+```
+
+---
+
 ## OpenStack Automation Flow
 
 ```text
@@ -92,6 +211,67 @@ Recommended controls:
 - Keep image catalog controlled by version
 - Use port pre-allocation for deterministic IP addresses
 - Enforce metadata tags for CMDB and audit
+
+---
+
+## Example OpenStack Terraform Code
+
+Example `automation/terraform/modules/openstack_instance/main.tf`:
+
+```hcl
+resource "openstack_networking_port_v2" "public" {
+  name           = "${var.instance_name}-public"
+  network_id     = var.public_network_id
+  admin_state_up = true
+
+  fixed_ip {
+    subnet_id  = var.public_subnet_id
+    ip_address = var.public_ip
+  }
+}
+
+resource "openstack_compute_instance_v2" "rac_vm" {
+  name            = var.instance_name
+  image_name      = var.image_name
+  flavor_name     = var.flavor_name
+  key_pair        = var.keypair
+  security_groups = var.security_groups
+  user_data       = var.cloud_init
+
+  network {
+    port = openstack_networking_port_v2.public.id
+  }
+}
+```
+
+Example cloud-init:
+
+```yaml
+#cloud-config
+hostname: rac-node3
+fqdn: rac-node3.company.local
+users:
+  - name: ansible
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: wheel
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3Nza...
+package_update: true
+packages:
+  - chrony
+  - python3
+runcmd:
+  - hostnamectl set-hostname rac-node3.company.local
+  - systemctl enable --now chronyd
+```
+
+Run:
+
+```bash
+terraform -chdir=automation/terraform/environments/dr init
+terraform -chdir=automation/terraform/environments/dr plan
+terraform -chdir=automation/terraform/environments/dr apply
+```
 
 ---
 
@@ -133,6 +313,26 @@ Use cloud-init to automate:
 - Initial package install
 - Ansible pull or callback bootstrap
 
+Example Kickstart snippet:
+
+```text
+lang en_US.UTF-8
+keyboard us
+timezone Asia/Ho_Chi_Minh --isUtc
+rootpw --lock
+reboot
+network --bootproto=static --device=ens192 --ip=192.168.10.11 --netmask=255.255.255.0 --gateway=192.168.10.1 --nameserver=192.168.10.53 --hostname=rac-node1.company.local
+firewall --disabled
+selinux --enforcing
+services --enabled="chronyd,sshd"
+%packages
+@^minimal-environment
+chrony
+python3
+open-vm-tools
+%end
+```
+
 ---
 
 ## Build Sequence
@@ -148,6 +348,13 @@ Recommended sequence per node:
 7. Trigger baseline playbooks
 
 This sequence prevents application-level configuration from starting before the host is stable.
+
+Example bootstrap validation:
+
+```bash
+ansible -i automation/ansible/inventories/prod/hosts.yml rac_primary -m ping
+ansible -i automation/ansible/inventories/prod/hosts.yml rac_primary -m shell -a "hostnamectl; ip addr show"
+```
 
 ---
 
@@ -184,6 +391,12 @@ If provisioning fails:
 - Re-run only after root cause is recorded
 
 Avoid manual repair of half-built systems unless it is part of an incident response process.
+
+Rollback example:
+
+```bash
+terraform -chdir=automation/terraform/environments/prod destroy -target=module.rac_node1
+```
 
 ---
 
