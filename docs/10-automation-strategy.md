@@ -345,4 +345,9 @@ Key outcomes:
 This completes the end-to-end technical design from infrastructure setup to resilient operations.
 
 For detailed implementation flows, continue with:
-[10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)
+
+- [10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)
+- [10-02-vm-and-os-provisioning-automation.md](./10-02-vm-and-os-provisioning-automation.md)
+- [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
+- [10-04-dns-and-service-endpoint-automation.md](./10-04-dns-and-service-endpoint-automation.md)
+- [10-05-os-baseline-and-oracle-prerequisite-automation.md](./10-05-os-baseline-and-oracle-prerequisite-automation.md)
