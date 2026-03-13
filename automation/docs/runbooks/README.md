@@ -12,6 +12,14 @@ Suggested execution order:
 8. Run `dns-validate.yml`
 9. Run `site.yml` for the full baseline if needed
 
+For VMware Workstation Pro 17 lab builds:
+
+1. Copy `automation/workstation-pro/configs/lab-rac-nodes.example.json`
+2. Update local template and destination paths
+3. Run `invoke-lab-build.ps1`
+4. Wait for guest boot and network readiness
+5. Continue with the same Ansible playbooks
+
 Example commands:
 
 ```bash
@@ -23,4 +31,12 @@ ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ans
 ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/network.yml
 ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/os-baseline.yml
 ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/dns-validate.yml
+```
+
+
+Workstation Pro example:
+
+```powershell
+Copy-Item automation\workstation-pro\configs\lab-rac-nodes.example.json automation\workstation-pro\configs\lab-rac-nodes.json
+.\automation\workstation-pro\scripts\invoke-lab-build.ps1 -ConfigPath .\automation\workstation-pro\configs\lab-rac-nodes.json
 ```

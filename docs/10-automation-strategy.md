@@ -29,6 +29,8 @@ Detailed implementation guidance is split into the following companion documents
   Details automation for host records, VIP, SCAN, logical database endpoints, TTL policy, and DR DNS cutover workflow.
 - [10-05-os-baseline-and-oracle-prerequisite-automation.md](./10-05-os-baseline-and-oracle-prerequisite-automation.md)  
   Defines automated OS baseline hardening and Oracle prerequisite setup, including packages, users, kernel parameters, limits, and readiness checks.
+- [10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)  
+  Describes automation for VMware Workstation Pro 17 in local lab environments, including template clone, VMX update, `vmrun` execution, and handoff to Ansible.
 
 ---
 
@@ -351,3 +353,4 @@ For detailed implementation flows, continue with:
 - [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
 - [10-04-dns-and-service-endpoint-automation.md](./10-04-dns-and-service-endpoint-automation.md)
 - [10-05-os-baseline-and-oracle-prerequisite-automation.md](./10-05-os-baseline-and-oracle-prerequisite-automation.md)
+- [10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)

@@ -4,7 +4,7 @@
 
 This section describes how to automate virtual machine provisioning and operating system installation for Oracle RAC and Data Guard nodes.
 
-The design supports both VMware vSphere and OpenStack so the same operating model can be reused across private cloud platforms.
+The design supports VMware vSphere, OpenStack, and VMware Workstation Pro 17 so the same operating model can be reused across production and lab platforms.
 
 Automation scope includes:
 
@@ -22,6 +22,7 @@ Automation scope includes:
 |------|------|------|
 | VMware vSphere | Terraform provider for vSphere | Golden template clone or Kickstart-based install |
 | OpenStack | Terraform provider for OpenStack | Image boot with cloud-init |
+| VMware Workstation Pro 17 | PowerShell + `vmrun` + local template clone | Prebuilt VM template or unattended OS install |
 
 Preferred pattern:
 
@@ -37,7 +38,7 @@ Required parameters for each node:
 | Parameter | Example |
 |------|------|
 | Site | primary / dr |
-| Platform | vmware / openstack |
+| Platform | vmware / openstack / workstation_pro |
 | Hostname | rac-node1.company.local |
 | vCPU | 32 |
 | Memory | 128 GB |
@@ -56,7 +57,7 @@ All inputs should be stored as code in environment variable files.
 Before starting, prepare:
 
 1. Approved Oracle Linux template or image
-2. vCenter or OpenStack credentials
+2. vCenter or OpenStack credentials, or local VMware Workstation access
 3. IP plan for public, interconnect, and management networks
 4. DNS names reserved for each node
 5. SSH public key for automation account
@@ -312,6 +313,25 @@ Use cloud-init to automate:
 - Registration to package repositories
 - Initial package install
 - Ansible pull or callback bootstrap
+
+### VMware Workstation Pro Approach
+
+Use VMware Workstation Pro 17 for:
+
+- Local lab setup
+- Fresher onboarding
+- Script validation before moving to vSphere
+
+Recommended method:
+
+- Keep a powered-off Oracle Linux template VM
+- Clone the template directory
+- Update `.vmx` values for CPU, memory, and VM name
+- Start the VM using `vmrun`
+- Hand off to Ansible after SSH is reachable
+
+Detailed implementation:
+[10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)
 
 Example Kickstart snippet:
 

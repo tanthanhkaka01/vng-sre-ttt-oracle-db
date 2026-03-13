@@ -21,6 +21,7 @@ The automation platform covers:
 | Layer | Primary Tool | Purpose |
 |------|------|------|
 | Infrastructure provisioning | Terraform | VM, network, DNS, storage objects |
+| Local lab provisioning | PowerShell, `vmrun` | VMware Workstation Pro 17 VM lifecycle |
 | Guest OS bootstrap | cloud-init, Kickstart, templates | Initial OS installation and bootstrap |
 | Configuration management | Ansible | OS baseline, network, Oracle prerequisites |
 | Secret management | Vault or enterprise secret manager | Credentials, SSH keys, API tokens |
@@ -59,6 +60,7 @@ automation/
     modules/
       vmware_vm/
       openstack_instance/
+      workstation_reference/
       dns_records/
       network_segments/
     environments/
@@ -111,7 +113,7 @@ Before running any automation, prepare the following:
 
 1. Access to Git repository with read and write permission
 2. Access to CI/CD platform with permission to run pipelines
-3. Service account for vCenter or OpenStack API
+3. Service account for vCenter or OpenStack API, or local VMware Workstation host access
 4. Service account for DNS automation
 5. SSH private key for Ansible control node
 6. Secret manager path for storing API and SSH credentials
@@ -166,6 +168,8 @@ automation/
         main.tf
         variables.tf
         outputs.tf
+      workstation_reference/
+        README.md
       openstack_instance/
         main.tf
         variables.tf
@@ -206,6 +210,16 @@ automation/
 ```
 
 This layout is simple enough for junior engineers and still production-safe.
+
+For local lab automation, add:
+
+```text
+automation/
+  workstation-pro/
+    configs/
+    scripts/
+    templates/
+```
 
 ---
 
@@ -381,3 +395,4 @@ Continue with:
 - [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
 - [10-04-dns-and-service-endpoint-automation.md](./10-04-dns-and-service-endpoint-automation.md)
 - [10-05-os-baseline-and-oracle-prerequisite-automation.md](./10-05-os-baseline-and-oracle-prerequisite-automation.md)
+- [10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)

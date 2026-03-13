@@ -1,0 +1,20 @@
+{
+  "templatePath": "D:\\VM\\Templates\\ol8-rac-template",
+  "vmrunPath": "C:\\Program Files (x86)\\VMware\\VMware Workstation\\vmrun.exe",
+  "vms": [
+    {
+      "name": "rac-lab-node1",
+      "destinationPath": "D:\\VM\\OracleLab\\rac-lab-node1",
+      "vmxName": "rac-lab-node1.vmx",
+      "memoryMb": 16384,
+      "numVcpus": 4
+    },
+    {
+      "name": "rac-lab-node2",
+      "destinationPath": "D:\\VM\\OracleLab\\rac-lab-node2",
+      "vmxName": "rac-lab-node2.vmx",
+      "memoryMb": 16384,
+      "numVcpus": 4
+    }
+  ]
+}

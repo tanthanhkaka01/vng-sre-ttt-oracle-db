@@ -204,7 +204,7 @@ bond0.20 -> private interconnect
 bond1.30 -> management
 ```
 
-These settings should be parameterized so VMware and OpenStack sites can share the same role logic with different variables.
+These settings should be parameterized so VMware, OpenStack, and VMware Workstation Pro sites can share the same role logic with different variables.
 
 Example bond configuration task:
 
