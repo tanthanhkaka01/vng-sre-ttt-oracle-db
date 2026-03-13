@@ -15,6 +15,16 @@ Automation scope includes:
 - Failover orchestration and DR drills
 - Compliance, audit, and governance workflows
 
+This document is the summary layer for the automation design.
+
+Detailed implementation guidance is split into the following companion documents:
+
+- [10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)
+- [10-02-vm-and-os-provisioning-automation.md](./10-02-vm-and-os-provisioning-automation.md)
+- [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
+- [10-04-dns-and-service-endpoint-automation.md](./10-04-dns-and-service-endpoint-automation.md)
+- [10-05-os-baseline-and-oracle-prerequisite-automation.md](./10-05-os-baseline-and-oracle-prerequisite-automation.md)
+
 ---
 
 ## Automation Principles
@@ -328,3 +338,6 @@ Key outcomes:
 - Better reliability through policy-driven automation
 
 This completes the end-to-end technical design from infrastructure setup to resilient operations.
+
+For detailed implementation flows, continue with:
+[10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)
