@@ -34,3 +34,9 @@ Recommended usage order:
 4. Run Ansible validation and baseline playbooks
 5. Save outputs in the change record
 
+
+Important current limitation:
+
+- This repository currently provides stronger automation for VM lifecycle, network baseline, OS prerequisite baseline, and validation than for Oracle Grid installation, RAC database creation, and Data Guard build.
+- For an honest step-by-step readiness walkthrough across VMware vSphere / ESXi, OpenStack, and VMware Workstation Pro 17, see [automation/docs/runbooks/platform-end-to-end-simulation.md](./docs/runbooks/platform-end-to-end-simulation.md).
+

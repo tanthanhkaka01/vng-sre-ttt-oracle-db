@@ -1,5 +1,10 @@
 # Runbooks
 
+Important scope note:
+
+- This repository currently automates infrastructure baseline tasks more strongly than Oracle Grid, RAC database creation, or Data Guard build.
+- Use [platform-end-to-end-simulation.md](./platform-end-to-end-simulation.md) to see what is runnable now, what is partial, and what is still manual for VMware vSphere, OpenStack, and VMware Workstation Pro 17.
+
 Suggested execution order:
 
 1. Copy `terraform.tfvars.example` to `terraform.tfvars`
@@ -40,3 +45,4 @@ Workstation Pro example:
 Copy-Item automation\workstation-pro\configs\lab-rac-nodes.example.json automation\workstation-pro\configs\lab-rac-nodes.json
 .\automation\workstation-pro\scripts\invoke-lab-build.ps1 -ConfigPath .\automation\workstation-pro\configs\lab-rac-nodes.json
 ```
+

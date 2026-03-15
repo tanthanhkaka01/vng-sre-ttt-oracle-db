@@ -53,6 +53,12 @@ Use this route for vSphere or OpenStack based production and DR environments.
 5. [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)
 
 Use this route when building a local learning or test lab on VMware Workstation Pro. DNS automation in lab can be simplified if you are using a local resolver or `/etc/hosts` during early validation.
+
+Practical execution note:
+
+- The current repository automates provisioning scaffolding, network baseline, OS prerequisite baseline, and validation more completely than Oracle Grid installation, RAC database creation, and Data Guard build.
+- For a junior-friendly, platform-by-platform simulation of what can run now and what still needs implementation, see [../automation/docs/runbooks/platform-end-to-end-simulation.md](../automation/docs/runbooks/platform-end-to-end-simulation.md).
+
 ---
 
 ## Automation Principles
