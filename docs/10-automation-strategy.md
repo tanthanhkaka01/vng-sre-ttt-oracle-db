@@ -59,6 +59,107 @@ Practical execution note:
 - The current repository now includes silent automation scaffolding for Oracle Grid installation, RAC database creation, and Data Guard broker bootstrap, but these flows still depend on staged Oracle media, shared storage, and real platform provider configuration.
 - For a junior-friendly, platform-by-platform simulation of what can run now and what still needs implementation, see [../automation/docs/runbooks/platform-end-to-end-simulation.md](../automation/docs/runbooks/platform-end-to-end-simulation.md).
 
+### Simulation Review for VM Automation (2026-03-15)
+
+The repository was reviewed in a simulated environment for the three requested VM automation paths:
+
+- VMware vSphere
+- OpenStack
+- VMware Workstation Pro 17
+
+Scope of this review:
+
+- Read the live Terraform, Ansible, and PowerShell assets in the repository
+- Confirm that the environment Terraform files already call the vSphere and OpenStack modules
+- Confirm that the VMware Workstation Pro scripts implement clone, start, and stop flows
+- Record whether the code looks runnable with real infrastructure backing it
+
+Important limitation of this review:
+
+- This workstation does not currently have `terraform` or `ansible-playbook` installed, so the review is a code-path simulation and readiness check, not a real `plan/apply` or playbook execution.
+
+### VM Automation Readiness Verdict
+
+| Platform | Repository implementation status | Can code run on real environment? | Honest verdict |
+|------|------|------|------|
+| VMware vSphere | Terraform environment and module wiring exist | Yes, if real vCenter/template/network values are supplied | OK at VM provisioning layer, not yet full RAC end-to-end |
+| OpenStack | Terraform environment and module wiring exist | Yes, if real OpenStack credentials, networks, image, and security groups are supplied | OK at instance provisioning layer, not yet full RAC end-to-end |
+| VMware Workstation Pro 17 | PowerShell scripts exist for clone/start/stop/build | Yes, if `vmrun.exe`, template VM, and local paths are valid | Best current path for lab simulation and junior onboarding |
+
+### Platform-by-Platform Notes
+
+#### VMware vSphere
+
+What is present in code now:
+
+- `automation/terraform/environments/prod/main.tf` already loops through `var.vmware_nodes`
+- `automation/terraform/modules/vmware_vm/main.tf` creates a `vsphere_virtual_machine`
+- The module already sets CPU, memory, system disk, three NICs, clone source, guest hostname, gateway, and DNS list
+- `automation/terraform/environments/prod/providers.tf` already contains a real `vsphere` provider block
+
+What this means:
+
+- The vSphere path is no longer only documentation; it is implementable code.
+- If you provide a valid `terraform.tfvars`, real provider credentials, template UUID, datastore, resource pool, and network IDs, the VM creation layer is designed to run for real.
+
+What still blocks full end-to-end automation:
+
+- DNS creation is still placeholder-only through `null_resource`
+- Shared storage and ASM disk preparation are not automated
+- Grid, RAC DB, and Data Guard still depend on Oracle media and real storage/network prerequisites
+
+#### OpenStack
+
+What is present in code now:
+
+- `automation/terraform/environments/dr/main.tf` already loops through `var.openstack_nodes`
+- `automation/terraform/modules/openstack_instance/main.tf` creates three ports plus one compute instance
+- `automation/terraform/environments/dr/providers.tf` already contains a real `openstack` provider block
+
+What this means:
+
+- The OpenStack path is also beyond documentation level.
+- With valid auth, image, flavor, networks, subnets, and security groups, the instance provisioning layer is designed to run for real.
+
+What still blocks full end-to-end automation:
+
+- DNS creation is still placeholder-only
+- RAC shared storage design is still outside the repository
+- Oracle Grid, RAC DB, and Data Guard remain environment-dependent
+
+#### VMware Workstation Pro 17
+
+What is present in code now:
+
+- `automation/workstation-pro/scripts/create-vm.ps1` clones a template directory, renames the VMX, and updates display name, memory, and vCPU
+- `automation/workstation-pro/scripts/start-vm.ps1` and `stop-vm.ps1` call `vmrun`
+- `automation/workstation-pro/scripts/invoke-lab-build.ps1` loops through the JSON config and builds multiple lab VMs
+
+What this means:
+
+- This is the closest path to something you can actually practice quickly in a local lab.
+- If VMware Workstation Pro 17, `vmrun.exe`, a powered-off template, and valid JSON paths are present, the script path is designed to run for real.
+
+Current caveats:
+
+- The script assumes the cloned template remains valid after directory copy and VMX rename
+- There is no automation yet for RAC shared disks, lab DNS, or full Oracle stack completion
+- Successful Oracle RAC simulation still depends on extra manual lab preparation
+
+### Final Simulation Conclusion
+
+For the requested VM automation simulation, the answer is:
+
+- The code base is OK for simulated review across all three platforms
+- The code is plausibly runnable for real at the VM creation layer on all three platforms when connected to a real environment
+- The repository is not yet a one-click full Oracle RAC + Data Guard automation solution
+
+Recommended current usage order:
+
+1. Use VMware Workstation Pro 17 first for lab practice
+2. Use VMware vSphere next for production-style VM provisioning
+3. Use OpenStack when the real storage and provider model is finalized
+
 ---
 
 ## Automation Principles
