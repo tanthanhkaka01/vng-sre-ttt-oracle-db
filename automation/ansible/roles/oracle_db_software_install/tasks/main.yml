@@ -1,0 +1,82 @@
+- name: Determine database cluster group
+  ansible.builtin.set_fact:
+    oracle_cluster_group: "{{ 'rac_primary' if inventory_hostname in groups['rac_primary'] else 'rac_dr' }}"
+
+- name: Ensure database response directory exists
+  ansible.builtin.file:
+    path: "{{ automation_response_dir }}"
+    state: directory
+    owner: oracle
+    group: oinstall
+    mode: "0775"
+
+- name: Ensure Oracle database home directory exists
+  ansible.builtin.file:
+    path: "{{ db_home }}"
+    state: directory
+    owner: oracle
+    group: oinstall
+    mode: "0775"
+
+- name: Render Oracle environment file
+  ansible.builtin.template:
+    src: oracle-setenv.sh.j2
+    dest: /home/oracle/setEnv.sh
+    owner: oracle
+    group: oinstall
+    mode: "0755"
+
+- name: Unpack Oracle database home when missing
+  ansible.builtin.command: >-
+    unzip -oq {{ oracle_db_stage_zip }} -d {{ db_home }}
+  args:
+    creates: "{{ db_home }}/runInstaller"
+  become_user: oracle
+
+- name: Render database software response file
+  ansible.builtin.template:
+    src: db-install.rsp.j2
+    dest: "{{ automation_response_dir }}/db-install-{{ oracle_cluster_group }}.rsp"
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+
+- name: Check whether database software install marker exists
+  ansible.builtin.stat:
+    path: "{{ automation_response_dir }}/.db_software_installed_{{ oracle_cluster_group }}"
+  register: db_install_marker
+
+- name: Install Oracle database software in RAC mode from the first node in each cluster
+  ansible.builtin.command: >-
+    {{ db_home }}/runInstaller -silent
+    -responseFile {{ automation_response_dir }}/db-install-{{ oracle_cluster_group }}.rsp
+    -waitforcompletion
+    -ignorePrereqFailure
+  become_user: oracle
+  when:
+    - inventory_hostname == groups[oracle_cluster_group][0]
+    - not db_install_marker.stat.exists
+
+- name: Run Oracle database root script when present
+  ansible.builtin.command: "{{ db_home }}/root.sh"
+  when:
+    - inventory_hostname in groups[oracle_cluster_group]
+    - not db_install_marker.stat.exists
+
+- name: Deploy TNS aliases for primary and standby services
+  ansible.builtin.template:
+    src: tnsnames.ora.j2
+    dest: "{{ db_home }}/network/admin/tnsnames.ora"
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+
+- name: Mark database software install complete for the cluster
+  ansible.builtin.file:
+    path: "{{ automation_response_dir }}/.db_software_installed_{{ oracle_cluster_group }}"
+    state: touch
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+  when: inventory_hostname == groups[oracle_cluster_group][0]
+

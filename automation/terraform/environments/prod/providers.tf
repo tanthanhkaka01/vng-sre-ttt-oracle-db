@@ -1,6 +1,9 @@
 provider "null" {}
 
-# Add real providers here when your environment is ready.
-# Example:
-# provider "vsphere" {}
-# provider "openstack" {}
+provider "vsphere" {
+  user                 = var.vcenter_user
+  password             = var.vcenter_password
+  vsphere_server       = var.vcenter_server
+  allow_unverified_ssl = var.vcenter_allow_unverified_ssl
+}
+

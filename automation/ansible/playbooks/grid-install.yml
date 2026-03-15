@@ -1,0 +1,6 @@
+- name: Install Oracle Grid Infrastructure on all cluster nodes
+  hosts: rac_primary:rac_dr
+  become: true
+  roles:
+    - oracle_grid_install
+

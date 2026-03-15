@@ -7,3 +7,32 @@
     - oracle_prereq
     - grid_prep
     - dns_validation
+
+- name: Install Oracle Grid Infrastructure when requested
+  hosts: rac_primary:rac_dr
+  become: true
+  roles:
+    - role: oracle_grid_install
+      when: automation_install_grid | default(false) | bool
+
+- name: Install Oracle Database software when requested
+  hosts: rac_primary:rac_dr
+  become: true
+  roles:
+    - role: oracle_db_software_install
+      when: automation_install_db_software | default(false) | bool
+
+- name: Create primary RAC database when requested
+  hosts: rac_primary
+  become: true
+  roles:
+    - role: oracle_rac_database
+      when: automation_create_rac_database | default(false) | bool
+
+- name: Configure Data Guard when requested
+  hosts: rac_primary
+  become: true
+  roles:
+    - role: dataguard_broker
+      when: automation_configure_dataguard | default(false) | bool
+

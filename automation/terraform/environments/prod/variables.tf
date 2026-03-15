@@ -14,3 +14,39 @@ variable "host_records" {
     value = string
   }))
 }
+
+variable "vcenter_server" { type = string }
+variable "vcenter_user" { type = string }
+variable "vcenter_password" {
+  type      = string
+  sensitive = true
+}
+variable "vcenter_allow_unverified_ssl" {
+  type    = bool
+  default = true
+}
+
+variable "vmware_nodes" {
+  type = list(object({
+    name                  = string
+    short_hostname        = string
+    domain                = string
+    vm_folder             = string
+    num_cpus              = number
+    memory_mb             = number
+    system_disk_gb        = number
+    datastore_id          = string
+    resource_pool_id      = string
+    guest_id              = string
+    template_uuid         = string
+    public_network_id     = string
+    private_network_id    = string
+    management_network_id = string
+    public_ip             = string
+    public_netmask        = number
+    public_gateway        = string
+    dns_servers           = list(string)
+  }))
+  default = []
+}
+

@@ -1,0 +1,18 @@
+shutdown immediate;
+startup mount;
+alter database archivelog;
+alter database open;
+alter database force logging;
+alter system set log_archive_config='DG_CONFIG=({{ primary_db_unique_name }},{{ standby_db_unique_name }})' scope=both sid='*';
+alter system set log_archive_dest_1='LOCATION=USE_DB_RECOVERY_FILE_DEST VALID_FOR=(ALL_LOGFILES,ALL_ROLES) DB_UNIQUE_NAME={{ primary_db_unique_name }}' scope=both sid='*';
+alter system set log_archive_dest_2='SERVICE={{ standby_dg_connect_identifier }} SYNC AFFIRM VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME={{ standby_db_unique_name }}' scope=both sid='*';
+alter system set log_archive_dest_state_1=ENABLE scope=both sid='*';
+alter system set log_archive_dest_state_2=ENABLE scope=both sid='*';
+alter system set fal_server='{{ standby_dg_connect_identifier }}' scope=both sid='*';
+alter system set standby_file_management='AUTO' scope=both sid='*';
+{% for item in standby_redo_logs %}
+alter database add standby logfile thread {{ item.thread }} group {{ item.group }} ('+FRA') size {{ item.size_mb }}M;
+{% endfor %}
+alter system set dg_broker_start=true scope=both sid='*';
+exit;
+

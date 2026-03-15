@@ -13,3 +13,82 @@ host_records = [
   { name = "rac-node3.company.local", value = "192.168.110.11" },
   { name = "rac-node4.company.local", value = "192.168.110.12" }
 ]
+
+openstack_auth_url    = "https://openstack.company.local:5000/v3"
+openstack_tenant_name = "oracle-prod"
+openstack_user_name   = "svc_terraform"
+openstack_password    = "change-me"
+openstack_region      = "RegionOne"
+openstack_domain_name = "Default"
+
+openstack_nodes = [
+  {
+    name                  = "rac-node3.company.local"
+    image_name            = "oracle-linux-8.8"
+    flavor_name           = "ol8-rac-large"
+    keypair               = "oracle-automation"
+    security_groups       = ["default", "oracle-rac"]
+    cloud_init            = <<-EOT
+#cloud-config
+hostname: rac-node3
+fqdn: rac-node3.company.local
+users:
+  - name: ansible
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: wheel
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaExample
+package_update: true
+packages:
+  - chrony
+  - python3
+runcmd:
+  - hostnamectl set-hostname rac-node3.company.local
+  - systemctl enable --now chronyd
+EOT
+    public_network_id     = "network-public-id"
+    public_subnet_id      = "subnet-public-id"
+    public_ip             = "192.168.110.11"
+    private_network_id    = "network-private-id"
+    private_subnet_id     = "subnet-private-id"
+    private_ip            = "192.168.120.11"
+    management_network_id = "network-mgmt-id"
+    management_subnet_id  = "subnet-mgmt-id"
+    management_ip         = "192.168.130.11"
+  },
+  {
+    name                  = "rac-node4.company.local"
+    image_name            = "oracle-linux-8.8"
+    flavor_name           = "ol8-rac-large"
+    keypair               = "oracle-automation"
+    security_groups       = ["default", "oracle-rac"]
+    cloud_init            = <<-EOT
+#cloud-config
+hostname: rac-node4
+fqdn: rac-node4.company.local
+users:
+  - name: ansible
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: wheel
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaExample
+package_update: true
+packages:
+  - chrony
+  - python3
+runcmd:
+  - hostnamectl set-hostname rac-node4.company.local
+  - systemctl enable --now chronyd
+EOT
+    public_network_id     = "network-public-id"
+    public_subnet_id      = "subnet-public-id"
+    public_ip             = "192.168.110.12"
+    private_network_id    = "network-private-id"
+    private_subnet_id     = "subnet-private-id"
+    private_ip            = "192.168.120.12"
+    management_network_id = "network-mgmt-id"
+    management_subnet_id  = "subnet-mgmt-id"
+    management_ip         = "192.168.130.12"
+  }
+]
+

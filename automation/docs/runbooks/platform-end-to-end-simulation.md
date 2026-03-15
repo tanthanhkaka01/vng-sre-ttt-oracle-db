@@ -45,9 +45,10 @@ For all three platforms, the intended final target is:
 
 Current repository reality:
 
-- Steps 1 to 4 are partially automated depending on platform
-- Steps 5 to 8 are mostly manual runbook steps today
-- Step 9 has only a small set of operational scripts today
+- Steps 1 to 4 are automated or partially automated depending on platform
+- Steps 6 to 8 now have executable silent-install scaffolding in Ansible, but still depend on Oracle media, storage, and platform prerequisites
+- Step 5 remains largely platform-specific and still needs storage integration work
+- Step 9 has a small but useful set of operational scripts today
 
 ---
 
@@ -93,9 +94,9 @@ Current repository reality:
 | Create real DNS records | Partial | `dns_records` module is a `null_resource` placeholder |
 | Shared storage presentation | Manual only | No vSphere or storage automation for RAC shared disks |
 | ASM disk preparation | Manual only | No automation for multipath, udev, or ASM device naming |
-| Grid install | Manual only | No Ansible role or shell wrapper for `gridSetup.sh` |
-| RAC DB creation | Manual only | No automation for DBCA silent mode |
-| Data Guard build | Manual only | No automation for duplicate, broker config, or switchover setup |
+| Grid install | Partial | Silent Ansible role now exists, but still assumes staged Oracle media and valid response inputs |
+| RAC DB creation | Partial | Silent DBCA automation now exists, but still assumes successful Grid and DB software installation |
+| Data Guard build | Partial | Ansible automation now renders SQL, RMAN, and DGMGRL scripts, but still assumes working connectivity, media, and storage |
 
 ### Junior-friendly simulation verdict
 
@@ -151,9 +152,9 @@ Current repository reality:
 | OpenStack provider setup | Partial | Provider scaffolding is not fully configured in env files |
 | RAC shared storage model | Manual only | No automation for OpenStack shared block storage design suitable for RAC |
 | DNS creation | Partial | Validation exists, creation does not |
-| Grid install | Manual only | No executable automation in repo |
-| RAC DB creation | Manual only | No silent DBCA automation in repo |
-| Data Guard build | Manual only | Only design docs and health scripts exist |
+| Grid install | Partial | Silent Ansible role now exists, but OpenStack platform prerequisites are still external to the repo |
+| RAC DB creation | Partial | Silent DBCA automation now exists, but still depends on successful cluster build |
+| Data Guard build | Partial | Data Guard automation now exists, but still requires valid network, storage, and duplicate prerequisites |
 
 ### Junior-friendly simulation verdict
 
@@ -205,9 +206,9 @@ Current repository reality:
 |------|--------|--------------------------|
 | Shared storage for RAC | Manual only | No lab storage automation or ASM-ready shared disk orchestration |
 | RAC network extras | Partial | Basic NIC config exists, but SCAN/VIP host integration is not end-to-end |
-| Grid install | Manual only | No silent install automation |
-| RAC DB creation | Manual only | No DBCA automation |
-| DR build | Manual only | No automated duplicate or broker setup |
+| Grid install | Partial | Silent Ansible role now exists for lab use, but still assumes staged media and ASM-ready disks |
+| RAC DB creation | Partial | Silent DBCA automation now exists, but still depends on a healthy cluster build |
+| DR build | Partial | Data Guard automation now exists, but lab storage and multi-node standby assumptions still need validation |
 
 ### Junior-friendly simulation verdict
 
@@ -244,12 +245,12 @@ If you want a realistic junior-friendly adoption order today:
 | DNS validation | Runnable now | Runnable now | Runnable now if DNS exists |
 | DNS creation | Partial | Partial | Manual only |
 | Shared storage / ASM prep | Manual only | Manual only | Manual only |
-| Grid install | Manual only | Manual only | Manual only |
-| RAC DB creation | Manual only | Manual only | Manual only |
-| Data Guard build | Manual only | Manual only | Manual only |
+| Grid install | Partial | Partial | Partial |
+| RAC DB creation | Partial | Partial | Partial |
+| Data Guard build | Partial | Partial | Partial |
 
 Bottom line:
 
-- The repository is currently a strong starter kit for infrastructure baseline automation.
-- It is not yet a complete Oracle RAC + Data Guard automation factory.
+- The repository now includes executable automation for much more of the Oracle stack than before, especially Grid, RAC DB, and Data Guard bootstrap.
+- It still depends on real Oracle media, storage presentation, and live provider integration, so end-to-end success is environment-dependent.
 

@@ -1,0 +1,12 @@
+DUPLICATE TARGET DATABASE FOR STANDBY FROM ACTIVE DATABASE
+  DORECOVER
+  SPFILE
+  SET db_unique_name='{{ standby_db_unique_name }}'
+  SET cluster_database='true'
+  SET log_archive_config='DG_CONFIG=({{ primary_db_unique_name }},{{ standby_db_unique_name }})'
+  SET log_archive_dest_1='LOCATION=USE_DB_RECOVERY_FILE_DEST VALID_FOR=(ALL_LOGFILES,ALL_ROLES) DB_UNIQUE_NAME={{ standby_db_unique_name }}'
+  SET log_archive_dest_2='SERVICE={{ primary_dg_connect_identifier }} SYNC AFFIRM VALID_FOR=(ONLINE_LOGFILES,PRIMARY_ROLE) DB_UNIQUE_NAME={{ primary_db_unique_name }}'
+  SET fal_server='{{ primary_dg_connect_identifier }}'
+  SET standby_file_management='AUTO'
+  NOFILENAMECHECK;
+

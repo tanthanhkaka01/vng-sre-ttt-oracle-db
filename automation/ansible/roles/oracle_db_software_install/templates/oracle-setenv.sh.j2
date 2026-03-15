@@ -1,0 +1,9 @@
+export ORACLE_BASE={{ oracle_base }}
+export ORACLE_HOME={{ db_home }}
+export ORAINVENTORY={{ oracle_inventory }}
+export GRID_HOME={{ grid_home }}
+export ORACLE_SID={{ oracle_instance_name }}
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:/lib:/usr/lib
+export NLS_LANG=AMERICAN_AMERICA.AL32UTF8
+export PATH=$GRID_HOME/bin:$ORACLE_HOME/bin:$PATH
+

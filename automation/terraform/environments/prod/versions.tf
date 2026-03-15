@@ -6,5 +6,10 @@ terraform {
       source  = "hashicorp/null"
       version = "~> 3.2"
     }
+    vsphere = {
+      source  = "hashicorp/vsphere"
+      version = "~> 2.6"
+    }
   }
 }
+

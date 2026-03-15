@@ -1,0 +1,6 @@
+- name: Create primary Oracle RAC database
+  hosts: rac_primary
+  become: true
+  roles:
+    - oracle_rac_database
+

@@ -37,6 +37,18 @@ Recommended usage order:
 
 Important current limitation:
 
-- This repository currently provides stronger automation for VM lifecycle, network baseline, OS prerequisite baseline, and validation than for Oracle Grid installation, RAC database creation, and Data Guard build.
+- This repository now automates VM lifecycle or provisioning scaffolding, network baseline, OS prerequisite baseline, and also includes silent-install scaffolding for Oracle Grid, RAC database creation, and Data Guard bootstrap.
 - For an honest step-by-step readiness walkthrough across VMware vSphere / ESXi, OpenStack, and VMware Workstation Pro 17, see [automation/docs/runbooks/platform-end-to-end-simulation.md](./docs/runbooks/platform-end-to-end-simulation.md).
+
+
+Full-stack playbooks now available:
+
+- `automation/ansible/playbooks/full-stack-prod.yml` for baseline + Grid + DB software + RAC DB + Data Guard
+- `automation/ansible/playbooks/full-stack-lab.yml` for baseline + Grid + DB software + RAC DB without Data Guard
+
+Assumptions still required:
+
+- Oracle media ZIP files are already staged on target hosts
+- Shared storage and ASM-visible disks are already presented to cluster nodes
+- Platform credentials and DNS integration are configured with real values
 

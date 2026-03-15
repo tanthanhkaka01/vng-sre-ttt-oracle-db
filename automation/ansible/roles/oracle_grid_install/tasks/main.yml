@@ -1,0 +1,113 @@
+- name: Determine cluster group for Grid install
+  ansible.builtin.set_fact:
+    oracle_cluster_group: "{{ 'rac_primary' if inventory_hostname in groups['rac_primary'] else 'rac_dr' }}"
+
+- name: Ensure Grid response directory exists
+  ansible.builtin.file:
+    path: "{{ automation_response_dir }}"
+    state: directory
+    owner: grid
+    group: oinstall
+    mode: "0775"
+
+- name: Ensure Grid home directory exists
+  ansible.builtin.file:
+    path: "{{ grid_home }}"
+    state: directory
+    owner: grid
+    group: oinstall
+    mode: "0775"
+
+- name: Render Grid environment file
+  ansible.builtin.template:
+    src: grid-setenv.sh.j2
+    dest: /home/grid/setEnv.sh
+    owner: grid
+    group: oinstall
+    mode: "0755"
+
+- name: Unpack Grid home when missing
+  ansible.builtin.command: >-
+    unzip -oq {{ oracle_grid_stage_zip }} -d {{ grid_home }}
+  args:
+    creates: "{{ grid_home }}/gridSetup.sh"
+  become_user: grid
+
+- name: Render Grid silent response file
+  ansible.builtin.template:
+    src: grid-install.rsp.j2
+    dest: "{{ automation_response_dir }}/grid-install-{{ oracle_cluster_group }}.rsp"
+    owner: grid
+    group: oinstall
+    mode: "0644"
+
+- name: Check whether Grid install marker exists
+  ansible.builtin.stat:
+    path: "{{ automation_response_dir }}/.grid_installed_{{ oracle_cluster_group }}"
+  register: grid_install_marker
+
+- name: Run Grid Infrastructure silent install from the first node in each cluster
+  ansible.builtin.command: >-
+    {{ grid_home }}/gridSetup.sh -silent
+    -responseFile {{ automation_response_dir }}/grid-install-{{ oracle_cluster_group }}.rsp
+    -waitforcompletion
+    -ignorePrereqFailure
+  become_user: grid
+  when:
+    - inventory_hostname == groups[oracle_cluster_group][0]
+    - not grid_install_marker.stat.exists
+
+- name: Run oraInventory root script when present
+  ansible.builtin.command: "{{ oracle_inventory }}/orainstRoot.sh"
+  args:
+    creates: /etc/oraInst.loc
+  when:
+    - inventory_hostname in groups[oracle_cluster_group]
+    - not grid_install_marker.stat.exists
+
+- name: Run Grid root script when present
+  ansible.builtin.command: "{{ grid_home }}/root.sh"
+  args:
+    creates: /etc/oracle/olr.loc
+  when:
+    - inventory_hostname in groups[oracle_cluster_group]
+    - not grid_install_marker.stat.exists
+
+- name: Query existing ASM disk groups
+  ansible.builtin.shell: |
+    set -euo pipefail
+    source /home/grid/setEnv.sh
+    sqlplus -s / as sysasm <<'SQL'
+    set pages 0 feedback off verify off heading off echo off
+    select name from v$asm_diskgroup;
+    exit;
+    SQL
+  args:
+    executable: /bin/bash
+  become_user: grid
+  register: asm_diskgroups_existing
+  changed_when: false
+  when: inventory_hostname == groups[oracle_cluster_group][0]
+
+- name: Create ASM disk groups in silent mode
+  ansible.builtin.command: >-
+    {{ grid_home }}/bin/asmca -silent -createDiskGroup
+    -diskGroupName {{ item.name }}
+    -diskList {{ item.disk_list | join(',') }}
+    -redundancy {{ item.redundancy }}
+    -au_size {{ item.au_size | default(4) }}
+  become_user: grid
+  when:
+    - inventory_hostname == groups[oracle_cluster_group][0]
+    - item.name not in (asm_diskgroups_existing.stdout_lines | default([]))
+  loop: "{{ asm_diskgroups }}"
+
+- name: Mark Grid install complete for the cluster
+  ansible.builtin.file:
+    path: "{{ automation_response_dir }}/.grid_installed_{{ oracle_cluster_group }}"
+    state: touch
+    owner: grid
+    group: oinstall
+    mode: "0644"
+  when: inventory_hostname == groups[oracle_cluster_group][0]
+

@@ -1,0 +1,6 @@
+CREATE CONFIGURATION {{ dg_configuration_name }} AS PRIMARY DATABASE IS {{ primary_db_unique_name }} CONNECT IDENTIFIER IS {{ primary_dg_connect_identifier }};
+ADD DATABASE {{ standby_db_unique_name }} AS CONNECT IDENTIFIER IS {{ standby_dg_connect_identifier }} MAINTAINED AS PHYSICAL;
+ENABLE CONFIGURATION;
+SHOW CONFIGURATION;
+EXIT;
+

@@ -1,0 +1,6 @@
+- name: Configure Oracle Data Guard and broker
+  hosts: rac_primary
+  become: true
+  roles:
+    - dataguard_broker
+

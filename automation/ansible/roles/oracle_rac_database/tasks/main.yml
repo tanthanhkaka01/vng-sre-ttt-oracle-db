@@ -1,0 +1,32 @@
+- name: Ensure DBCA response directory exists
+  ansible.builtin.file:
+    path: "{{ automation_response_dir }}"
+    state: directory
+    owner: oracle
+    group: oinstall
+    mode: "0775"
+
+- name: Render DBCA response file
+  ansible.builtin.template:
+    src: dbca.rsp.j2
+    dest: "{{ automation_response_dir }}/dbca-{{ rac_db_name }}.rsp"
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+
+- name: Check whether RAC database already exists
+  ansible.builtin.command: "{{ grid_home }}/bin/srvctl config database -db {{ rac_db_name }}"
+  become_user: oracle
+  register: rac_db_config
+  failed_when: false
+  changed_when: false
+
+- name: Create RAC database silently from the first primary node
+  ansible.builtin.command: >-
+    {{ db_home }}/bin/dbca -silent -createDatabase
+    -responseFile {{ automation_response_dir }}/dbca-{{ rac_db_name }}.rsp
+  become_user: oracle
+  when:
+    - inventory_hostname == groups['rac_primary'][0]
+    - rac_db_config.rc != 0
+

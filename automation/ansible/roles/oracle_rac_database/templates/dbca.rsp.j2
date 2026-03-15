@@ -1,0 +1,35 @@
+responseFileVersion=/oracle/assistants/rspfmt_dbca_response_schema_v21.0.0
+gds: false
+createAsContainerDatabase=true
+templateName=General_Purpose.dbc
+databaseConfigType=RAC
+sid={{ rac_db_sid_prefix }}
+gdbName={{ rac_db_name }}
+createServerPool=false
+nodeinfo={% for host in groups['rac_primary'] %}{{ hostvars[host].short_hostname }}{% if not loop.last %},{% endif %}{% endfor %}
+policyManaged=false
+createServerPool=false
+storageType=ASM
+diskGroupName=DATA
+recoveryGroupName=FRA
+characterset=AL32UTF8
+nationalCharacterSet=AL16UTF16
+memoryMgmtType=auto_sga
+initParams=processes={{ rac_db_processes }},sga_target={{ rac_db_sga_target_mb }}M,pga_aggregate_target={{ rac_db_pga_target_mb }}M,db_create_file_dest=+DATA,db_recovery_file_dest=+FRA,db_recovery_file_dest_size={{ rac_db_fra_size_mb }}M
+sampleSchema=false
+databaseType=MULTIPURPOSE
+automaticMemoryManagement=false
+totalMemory={{ rac_db_total_memory_mb }}
+emConfiguration=DBEXPRESS
+dbexpPort={{ dbexpress_port }}
+datafileDestination=+DATA
+recoveryAreaDestination=+FRA
+redoLogFileSize={{ redo_log_size_mb }}
+useOMF=true
+databasePassword={{ oracle_sys_password }}
+sysPassword={{ oracle_sys_password }}
+systemPassword={{ oracle_sys_password }}
+pdbAdminPassword={{ oracle_sys_password }}
+numberOfPDBs=1
+pdbName={{ rac_pdb_name }}
+

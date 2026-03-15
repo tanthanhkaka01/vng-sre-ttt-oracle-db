@@ -15,3 +15,25 @@ module "dns_dr" {
   service_name   = var.service_name
   service_target = var.service_target
 }
+
+module "openstack_nodes" {
+  for_each = { for node in var.openstack_nodes : node.name => node }
+  source   = "../../modules/openstack_instance"
+
+  instance_name         = each.value.name
+  image_name            = each.value.image_name
+  flavor_name           = each.value.flavor_name
+  keypair               = each.value.keypair
+  security_groups       = each.value.security_groups
+  cloud_init            = each.value.cloud_init
+  public_network_id     = each.value.public_network_id
+  public_subnet_id      = each.value.public_subnet_id
+  public_ip             = each.value.public_ip
+  private_network_id    = each.value.private_network_id
+  private_subnet_id     = each.value.private_subnet_id
+  private_ip            = each.value.private_ip
+  management_network_id = each.value.management_network_id
+  management_subnet_id  = each.value.management_subnet_id
+  management_ip         = each.value.management_ip
+}
+

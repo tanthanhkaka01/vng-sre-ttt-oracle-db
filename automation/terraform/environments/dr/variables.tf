@@ -14,3 +14,38 @@ variable "host_records" {
     value = string
   }))
 }
+
+variable "openstack_auth_url" { type = string }
+variable "openstack_tenant_name" { type = string }
+variable "openstack_user_name" { type = string }
+variable "openstack_password" {
+  type      = string
+  sensitive = true
+}
+variable "openstack_region" { type = string }
+variable "openstack_domain_name" {
+  type    = string
+  default = "Default"
+}
+
+variable "openstack_nodes" {
+  type = list(object({
+    name                  = string
+    image_name            = string
+    flavor_name           = string
+    keypair               = string
+    security_groups       = list(string)
+    cloud_init            = string
+    public_network_id     = string
+    public_subnet_id      = string
+    public_ip             = string
+    private_network_id    = string
+    private_subnet_id     = string
+    private_ip            = string
+    management_network_id = string
+    management_subnet_id  = string
+    management_ip         = string
+  }))
+  default = []
+}
+

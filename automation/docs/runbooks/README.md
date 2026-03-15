@@ -2,8 +2,14 @@
 
 Important scope note:
 
-- This repository currently automates infrastructure baseline tasks more strongly than Oracle Grid, RAC database creation, or Data Guard build.
+- This repository now automates infrastructure baseline tasks and also includes silent-install scaffolding for Oracle Grid, RAC database creation, and Data Guard broker bootstrap.
 - Use [platform-end-to-end-simulation.md](./platform-end-to-end-simulation.md) to see what is runnable now, what is partial, and what is still manual for VMware vSphere, OpenStack, and VMware Workstation Pro 17.
+
+For end-to-end orchestration:
+
+- Use `automation/ansible/playbooks/full-stack-prod.yml` with both inventories for primary and DR.
+- Example: `ansible-playbook -i automation/ansible/inventories/prod/hosts.yml -i automation/ansible/inventories/dr/hosts.yml automation/ansible/playbooks/full-stack-prod.yml`
+- Use `automation/ansible/playbooks/full-stack-lab.yml` for a lab-style build when you want Grid and RAC database automation without the Data Guard step.
 
 Suggested execution order:
 
@@ -37,7 +43,6 @@ ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ans
 ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/os-baseline.yml
 ansible-playbook -i automation/ansible/inventories/prod/hosts.yml automation/ansible/playbooks/dns-validate.yml
 ```
-
 
 Workstation Pro example:
 

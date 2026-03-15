@@ -1,0 +1,116 @@
+- name: Ensure Data Guard response directory exists
+  ansible.builtin.file:
+    path: "{{ automation_response_dir }}"
+    state: directory
+    owner: oracle
+    group: oinstall
+    mode: "0775"
+  delegate_to: "{{ groups['rac_primary'][0] }}"
+  run_once: true
+
+- name: Check whether Data Guard marker exists
+  ansible.builtin.stat:
+    path: "{{ automation_response_dir }}/.dataguard_configured"
+  register: dg_marker
+  delegate_to: "{{ groups['rac_primary'][0] }}"
+  run_once: true
+
+- name: Render primary Data Guard SQL script
+  ansible.builtin.template:
+    src: primary-dg-setup.sql.j2
+    dest: "{{ automation_response_dir }}/primary-dg-setup.sql"
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+  delegate_to: "{{ groups['rac_primary'][0] }}"
+  run_once: true
+
+- name: Render standby Data Guard SQL script
+  ansible.builtin.template:
+    src: standby-dg-setup.sql.j2
+    dest: "{{ automation_response_dir }}/standby-dg-setup.sql"
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+  delegate_to: "{{ groups['rac_dr'][0] }}"
+  run_once: true
+
+- name: Render RMAN duplicate command file
+  ansible.builtin.template:
+    src: duplicate-standby.rman.j2
+    dest: "{{ automation_response_dir }}/duplicate-standby.rman"
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+  delegate_to: "{{ groups['rac_dr'][0] }}"
+  run_once: true
+
+- name: Render broker configuration script
+  ansible.builtin.template:
+    src: broker-config.dgmgrl.j2
+    dest: "{{ automation_response_dir }}/broker-config.dgmgrl"
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+  delegate_to: "{{ groups['rac_primary'][0] }}"
+  run_once: true
+
+- name: Configure primary database for Data Guard
+  ansible.builtin.shell: |
+    set -euo pipefail
+    source /home/oracle/setEnv.sh
+    sqlplus / as sysdba @{{ automation_response_dir }}/primary-dg-setup.sql
+  args:
+    executable: /bin/bash
+  become_user: oracle
+  delegate_to: "{{ groups['rac_primary'][0] }}"
+  run_once: true
+  when: not dg_marker.stat.exists
+
+- name: Configure standby database prerequisites
+  ansible.builtin.shell: |
+    set -euo pipefail
+    source /home/oracle/setEnv.sh
+    sqlplus / as sysdba @{{ automation_response_dir }}/standby-dg-setup.sql
+  args:
+    executable: /bin/bash
+  become_user: oracle
+  delegate_to: "{{ groups['rac_dr'][0] }}"
+  run_once: true
+  when: not dg_marker.stat.exists
+
+- name: Duplicate standby database from active primary
+  ansible.builtin.shell: |
+    set -euo pipefail
+    source /home/oracle/setEnv.sh
+    rman target sys/{{ oracle_sys_password }}@{{ primary_dg_connect_identifier }} auxiliary sys/{{ oracle_sys_password }}@{{ standby_dg_connect_identifier }} cmdfile {{ automation_response_dir }}/duplicate-standby.rman
+  args:
+    executable: /bin/bash
+  become_user: oracle
+  delegate_to: "{{ groups['rac_dr'][0] }}"
+  run_once: true
+  when: not dg_marker.stat.exists
+
+- name: Enable Data Guard broker configuration
+  ansible.builtin.shell: |
+    set -euo pipefail
+    source /home/oracle/setEnv.sh
+    dgmgrl -silent sys/{{ oracle_sys_password }}@{{ primary_dg_connect_identifier }} @{{ automation_response_dir }}/broker-config.dgmgrl
+  args:
+    executable: /bin/bash
+  become_user: oracle
+  delegate_to: "{{ groups['rac_primary'][0] }}"
+  run_once: true
+  when: not dg_marker.stat.exists
+
+- name: Mark Data Guard configuration complete
+  ansible.builtin.file:
+    path: "{{ automation_response_dir }}/.dataguard_configured"
+    state: touch
+    owner: oracle
+    group: oinstall
+    mode: "0644"
+  delegate_to: "{{ groups['rac_primary'][0] }}"
+  run_once: true
+  when: not dg_marker.stat.exists
+

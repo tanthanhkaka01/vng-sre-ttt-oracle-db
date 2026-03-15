@@ -1,0 +1,7 @@
+- import_playbook: site.yml
+  vars:
+    automation_install_grid: true
+    automation_install_db_software: true
+    automation_create_rac_database: true
+    automation_configure_dataguard: false
+

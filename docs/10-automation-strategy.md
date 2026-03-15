@@ -56,7 +56,7 @@ Use this route when building a local learning or test lab on VMware Workstation 
 
 Practical execution note:
 
-- The current repository automates provisioning scaffolding, network baseline, OS prerequisite baseline, and validation more completely than Oracle Grid installation, RAC database creation, and Data Guard build.
+- The current repository now includes silent automation scaffolding for Oracle Grid installation, RAC database creation, and Data Guard broker bootstrap, but these flows still depend on staged Oracle media, shared storage, and real platform provider configuration.
 - For a junior-friendly, platform-by-platform simulation of what can run now and what still needs implementation, see [../automation/docs/runbooks/platform-end-to-end-simulation.md](../automation/docs/runbooks/platform-end-to-end-simulation.md).
 
 ---

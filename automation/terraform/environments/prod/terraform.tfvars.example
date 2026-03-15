@@ -13,3 +13,52 @@ host_records = [
   { name = "rac-node1.company.local", value = "192.168.10.11" },
   { name = "rac-node2.company.local", value = "192.168.10.12" }
 ]
+
+vcenter_server               = "vcsa01.company.local"
+vcenter_user                 = "svc_terraform@vsphere.local"
+vcenter_password             = "change-me"
+vcenter_allow_unverified_ssl = true
+
+vmware_nodes = [
+  {
+    name                  = "rac-node1.company.local"
+    short_hostname        = "rac-node1"
+    domain                = "company.local"
+    vm_folder             = "Oracle/Prod"
+    num_cpus              = 32
+    memory_mb             = 131072
+    system_disk_gb        = 1024
+    datastore_id          = "datastore-1001"
+    resource_pool_id      = "resgroup-1001"
+    guest_id              = "oracleLinux8_64Guest"
+    template_uuid         = "4200abcd-1111-2222-3333-444455556666"
+    public_network_id     = "network-101"
+    private_network_id    = "network-102"
+    management_network_id = "network-103"
+    public_ip             = "192.168.10.11"
+    public_netmask        = 24
+    public_gateway        = "192.168.10.1"
+    dns_servers           = ["192.168.10.53", "192.168.10.54"]
+  },
+  {
+    name                  = "rac-node2.company.local"
+    short_hostname        = "rac-node2"
+    domain                = "company.local"
+    vm_folder             = "Oracle/Prod"
+    num_cpus              = 32
+    memory_mb             = 131072
+    system_disk_gb        = 1024
+    datastore_id          = "datastore-1001"
+    resource_pool_id      = "resgroup-1001"
+    guest_id              = "oracleLinux8_64Guest"
+    template_uuid         = "4200abcd-1111-2222-3333-444455556666"
+    public_network_id     = "network-101"
+    private_network_id    = "network-102"
+    management_network_id = "network-103"
+    public_ip             = "192.168.10.12"
+    public_netmask        = 24
+    public_gateway        = "192.168.10.1"
+    dns_servers           = ["192.168.10.53", "192.168.10.54"]
+  }
+]
+
