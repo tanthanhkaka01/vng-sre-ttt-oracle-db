@@ -21,7 +21,7 @@ Detailed implementation guidance is split into the following companion documents
 
 - [10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)  
   Defines the automation platform, repository layout, CI/CD pipeline, approval model, execution flow, and rollback controls.
-- [10-02-vm-and-os-provisioning-automation.md](./10-02-vm-and-os-provisioning-automation.md)  
+- [10-02-01-vm-and-os-provisioning-automation.md](./10-02-01-vm-and-os-provisioning-automation.md)  
   Describes automated VM provisioning and OS installation for VMware vSphere and OpenStack, including templates, Kickstart, cloud-init, and validation flow.
 - [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)  
   Covers guest OS network automation for interface mapping, static IP configuration, VLAN, bonding, routing, MTU, and post-change validation.
@@ -29,7 +29,7 @@ Detailed implementation guidance is split into the following companion documents
   Defines automated OS baseline hardening and Oracle prerequisite setup, including packages, users, kernel parameters, limits, and readiness checks.
 - [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)  
   Details automation for host records, VIP, SCAN, logical database endpoints, TTL policy, and DR DNS cutover workflow.
-- [10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)  
+- [10-02-02-vmware-workstation-pro-automation.md](./10-02-02-vmware-workstation-pro-automation.md)  
   Describes the separate VMware Workstation Pro 17 automation path for local lab environments, including template clone, VMX update, `vmrun` execution, and handoff to Ansible.
 
 ## Recommended Execution Routes
@@ -37,7 +37,7 @@ Detailed implementation guidance is split into the following companion documents
 ### Production build path
 
 1. [10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)
-2. [10-02-vm-and-os-provisioning-automation.md](./10-02-vm-and-os-provisioning-automation.md)
+2. [10-02-01-vm-and-os-provisioning-automation.md](./10-02-01-vm-and-os-provisioning-automation.md)
 3. [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
 4. [10-04-os-baseline-and-oracle-prerequisite-automation.md](./10-04-os-baseline-and-oracle-prerequisite-automation.md)
 5. [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)
@@ -47,7 +47,7 @@ Use this route for vSphere or OpenStack based production and DR environments.
 ### Lab build path
 
 1. [10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)
-2. [10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)
+2. [10-02-02-vmware-workstation-pro-automation.md](./10-02-02-vmware-workstation-pro-automation.md)
 3. [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
 4. [10-04-os-baseline-and-oracle-prerequisite-automation.md](./10-04-os-baseline-and-oracle-prerequisite-automation.md)
 5. [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)
@@ -371,14 +371,15 @@ For detailed implementation flows, use the route that matches your target enviro
 
 Production path:
 1. [10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)
-2. [10-02-vm-and-os-provisioning-automation.md](./10-02-vm-and-os-provisioning-automation.md)
+2. [10-02-01-vm-and-os-provisioning-automation.md](./10-02-01-vm-and-os-provisioning-automation.md)
 3. [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
 4. [10-04-os-baseline-and-oracle-prerequisite-automation.md](./10-04-os-baseline-and-oracle-prerequisite-automation.md)
 5. [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)
 
 Lab path:
 1. [10-01-automation-platform-and-delivery-model.md](./10-01-automation-platform-and-delivery-model.md)
-2. [10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)
+2. [10-02-02-vmware-workstation-pro-automation.md](./10-02-02-vmware-workstation-pro-automation.md)
 3. [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
 4. [10-04-os-baseline-and-oracle-prerequisite-automation.md](./10-04-os-baseline-and-oracle-prerequisite-automation.md)
 5. [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)
+

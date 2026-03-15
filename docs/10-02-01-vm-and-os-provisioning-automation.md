@@ -1,4 +1,4 @@
-# 10-02 - VM and OS Provisioning Automation
+# 10-02-01 - VM and OS Provisioning Automation
 
 ## Overview
 
@@ -331,7 +331,7 @@ Recommended method:
 - Hand off to Ansible after SSH is reachable
 
 Detailed implementation:
-[10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)
+[10-02-02-vmware-workstation-pro-automation.md](./10-02-02-vmware-workstation-pro-automation.md)
 
 Example Kickstart snippet:
 
