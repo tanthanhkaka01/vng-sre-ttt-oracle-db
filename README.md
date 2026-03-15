@@ -31,6 +31,32 @@ The architecture follows common SRE principles including:
 
 ---
 
+## Automation Platforms and Software
+
+This design includes an automation layer so infrastructure build, OS baseline, and operational checks can be executed consistently across production and lab environments.
+
+### Target platforms
+
+- VMware vSphere / ESXi for production virtualization in the primary and DR datacenters
+- OpenStack for private cloud based production deployment
+- VMware Workstation Pro 17 for local lab build, onboarding, and dry-run automation testing
+
+### Core automation software
+
+| Area | Software / Platform | Purpose |
+|------|----------------------|---------|
+| Infrastructure provisioning | Terraform | Provision VM, network, DNS, and related infrastructure resources |
+| Guest OS and Oracle baseline | Ansible | Apply OS hardening, network baseline, Oracle prerequisites, and validation tasks |
+| Local lab VM lifecycle | PowerShell + `vmrun` | Clone, start, stop, and prepare VMware Workstation Pro lab VMs |
+| OS bootstrap | Kickstart, cloud-init, golden templates | Standardize Oracle Linux installation and first-boot configuration |
+| CI/CD orchestration | GitLab CI, GitHub Actions, or Jenkins | Run validation, approval gates, deployment jobs, and evidence collection |
+| Operational scripting | Bash / shell scripts | RMAN validation, Data Guard health checks, and controlled operational tasks |
+| Secrets and audit | Vault or enterprise secret manager + Git | Protect credentials and keep changes auditable |
+| Monitoring integration | Prometheus stack and Grafana | Expose automation metrics, alerting, and dashboards |
+
+For the detailed automation design, execution flow, and repository layout, see [docs/10-automation-strategy.md](./docs/10-automation-strategy.md) and [automation/automation-starter-kit.md](./automation/automation-starter-kit.md).
+---
+
 ## Architecture Overview
 ![Oracle HA Architecture](images/architecture.png)
 *Figure 1: High Availability Oracle Database Architecture using RAC and Data Guard.*
@@ -245,3 +271,4 @@ The architecture is designed to achieve the following targets:
 - Availability (SLO): 99.99%
 - Recovery Time Objective (RTO): 5 – 10 minutes
 - Recovery Point Objective (RPO): 0 seconds (SYNC replication)
+

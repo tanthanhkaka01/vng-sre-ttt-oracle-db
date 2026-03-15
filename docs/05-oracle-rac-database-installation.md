@@ -459,3 +459,4 @@ SELECT name, open_mode FROM v$pdbs;
 
 See:
 [06-data-guard-configuration.md](./06-data-guard-configuration.md)
+

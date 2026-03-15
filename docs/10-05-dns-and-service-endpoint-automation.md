@@ -1,4 +1,4 @@
-# 10-04 - DNS and Service Endpoint Automation
+# 10-05 - DNS and Service Endpoint Automation
 
 ## Overview
 
@@ -306,7 +306,8 @@ dig +short db.company.local
 
 ## Next Steps
 
-After DNS and service endpoint automation is in place, the next step is to automate OS baseline settings and Oracle prerequisite configuration.
+After DNS and service endpoint automation is in place, the environment is ready to continue with Oracle Grid Infrastructure installation and the higher database layers.
 
 See:
-[10-05-os-baseline-and-oracle-prerequisite-automation.md](./10-05-os-baseline-and-oracle-prerequisite-automation.md)
+[04-oracle-grid-infrastructure-installation.md](./04-oracle-grid-infrastructure-installation.md)
+

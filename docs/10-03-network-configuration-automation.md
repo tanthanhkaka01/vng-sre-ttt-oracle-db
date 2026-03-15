@@ -297,7 +297,8 @@ nmcli connection up ens256
 
 ## Next Steps
 
-After the guest operating system network is configured, the next step is to automate DNS records and service endpoints for Oracle RAC and Data Guard.
+After the guest operating system network is configured, the next step in the production build flow is to apply the OS baseline and Oracle prerequisite automation.
 
 See:
-[10-04-dns-and-service-endpoint-automation.md](./10-04-dns-and-service-endpoint-automation.md)
+[10-04-os-baseline-and-oracle-prerequisite-automation.md](./10-04-os-baseline-and-oracle-prerequisite-automation.md)
+

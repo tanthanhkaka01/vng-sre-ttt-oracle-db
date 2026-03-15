@@ -186,3 +186,4 @@ This architecture ensures high availability, data protection, and efficient stor
 
 See:
 [04-oracle-grid-infrastructure-installation.md](./04-oracle-grid-infrastructure-installation.md)
+

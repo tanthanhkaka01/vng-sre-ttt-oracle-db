@@ -389,10 +389,13 @@ These KPIs help prove the automation program is improving reliability instead of
 
 ## Detailed Automation Documents
 
-Continue with:
+Continue with the production path:
 
 - [10-02-vm-and-os-provisioning-automation.md](./10-02-vm-and-os-provisioning-automation.md)
 - [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
-- [10-04-dns-and-service-endpoint-automation.md](./10-04-dns-and-service-endpoint-automation.md)
-- [10-05-os-baseline-and-oracle-prerequisite-automation.md](./10-05-os-baseline-and-oracle-prerequisite-automation.md)
+- [10-04-os-baseline-and-oracle-prerequisite-automation.md](./10-04-os-baseline-and-oracle-prerequisite-automation.md)
+- [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)
+
+For the local lab route, jump from this document to:
+
 - [10-06-vmware-workstation-pro-automation.md](./10-06-vmware-workstation-pro-automation.md)

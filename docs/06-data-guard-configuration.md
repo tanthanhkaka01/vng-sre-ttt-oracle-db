@@ -346,3 +346,4 @@ This design supports high availability in primary and resilient disaster recover
 
 See:
 [07-backup-and-recovery-strategy.md](./07-backup-and-recovery-strategy.md)
+

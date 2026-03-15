@@ -1,4 +1,4 @@
-# 10-05 - OS Baseline and Oracle Prerequisite Automation
+# 10-04 - OS Baseline and Oracle Prerequisite Automation
 
 ## Overview
 
@@ -300,3 +300,14 @@ Practical handoff criteria:
 3. Storage devices are visible to the OS
 4. `grid` and `oracle` users can access their directories
 5. Validation output is attached to the change record
+
+
+---
+
+## Next Steps
+
+After the operating system baseline is stable, the next step is to automate DNS records and logical service endpoints used by Oracle RAC and Data Guard.
+
+See:
+[10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)
+

@@ -11,6 +11,21 @@ Included areas:
 - `docs/runbooks/` for execution guidance
 - `docs/rollback/` for rollback notes
 
+Automation platforms covered in this repository:
+
+- VMware vSphere / ESXi for production VM provisioning
+- OpenStack for private cloud provisioning
+- VMware Workstation Pro 17 for local lab automation and onboarding
+
+Core software used for automation:
+
+- Terraform for infrastructure provisioning modules and environment definitions
+- Ansible for OS bootstrap, network baseline, DNS validation, and Oracle prerequisite configuration
+- PowerShell and `vmrun` for VMware Workstation Pro VM lifecycle automation on Windows hosts
+- Bash / shell scripts for RMAN validation and Data Guard health checks
+- Kickstart, cloud-init, and golden templates for Oracle Linux bootstrap
+- CI/CD pipelines (`pipelines/validate.yml`, `pipelines/deploy.yml`) for validation, approval flow, and deployment execution
+
 Recommended usage order:
 
 1. Update Terraform environment variables in `terraform/environments/<env>/terraform.tfvars`
@@ -18,3 +33,4 @@ Recommended usage order:
 3. Run Terraform plan and apply for vSphere or OpenStack, or run PowerShell scripts for Workstation Pro
 4. Run Ansible validation and baseline playbooks
 5. Save outputs in the change record
+

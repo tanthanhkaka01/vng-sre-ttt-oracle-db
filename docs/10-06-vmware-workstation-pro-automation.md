@@ -217,4 +217,5 @@ Known limitations of this platform:
 After the lab VMs are created, continue with:
 
 - [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
-- [10-05-os-baseline-and-oracle-prerequisite-automation.md](./10-05-os-baseline-and-oracle-prerequisite-automation.md)
+- [10-04-os-baseline-and-oracle-prerequisite-automation.md](./10-04-os-baseline-and-oracle-prerequisite-automation.md)
+- [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md) if the lab uses a dedicated resolver instead of temporary host file mapping
