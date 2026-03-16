@@ -4,6 +4,14 @@ variable "flavor_name" { type = string }
 variable "keypair" { type = string }
 variable "security_groups" { type = list(string) }
 variable "cloud_init" { type = string }
+variable "root_volume_size_gb" {
+  type    = number
+  default = 120
+}
+variable "delete_root_volume_on_termination" {
+  type    = bool
+  default = true
+}
 variable "public_network_id" { type = string }
 variable "public_subnet_id" { type = string }
 variable "public_ip" { type = string }

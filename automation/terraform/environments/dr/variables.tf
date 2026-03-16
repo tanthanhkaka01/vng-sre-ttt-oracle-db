@@ -36,6 +36,7 @@ variable "openstack_nodes" {
     keypair               = string
     security_groups       = list(string)
     cloud_init            = string
+    root_volume_size_gb   = optional(number, 120)
     public_network_id     = string
     public_subnet_id      = string
     public_ip             = string
@@ -48,4 +49,3 @@ variable "openstack_nodes" {
   }))
   default = []
 }
-

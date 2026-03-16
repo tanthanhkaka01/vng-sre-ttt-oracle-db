@@ -51,6 +51,30 @@ function Update-VmxValue {
     Set-Content -Path $Path -Value $content
 }
 
+function Remove-VmxKeys {
+    param(
+        [string]$Path,
+        [string[]]$Patterns
+    )
+
+    $content = Get-Content -Path $Path
+    $filteredContent = foreach ($line in $content) {
+        $skipLine = $false
+        foreach ($pattern in $Patterns) {
+            if ($line -match $pattern) {
+                $skipLine = $true
+                break
+            }
+        }
+
+        if (-not $skipLine) {
+            $line
+        }
+    }
+
+    Set-Content -Path $Path -Value $filteredContent
+}
+
 $config = Get-Config -Path $ConfigPath
 $vm = Get-VmDefinition -Config $config -Name $VmName
 
@@ -73,9 +97,19 @@ $oldVmxPath = $vmxFiles[0].FullName
 $newVmxPath = Join-Path $vm.destinationPath $vm.vmxName
 Rename-Item -Path $oldVmxPath -NewName $vm.vmxName
 
+Remove-VmxKeys -Path $newVmxPath -Patterns @(
+    '^uuid\.bios\s*=',
+    '^uuid\.location\s*=',
+    '^ethernet\d+\.generatedAddress\s*=',
+    '^ethernet\d+\.generatedAddressOffset\s*=',
+    '^ethernet\d+\.addressType\s*='
+)
+
 Update-VmxValue -Path $newVmxPath -Key "displayName" -Value $vm.name
 Update-VmxValue -Path $newVmxPath -Key "memsize" -Value ([string]$vm.memoryMb)
 Update-VmxValue -Path $newVmxPath -Key "numvcpus" -Value ([string]$vm.numVcpus)
+Update-VmxValue -Path $newVmxPath -Key "uuid.action" -Value "create"
+Update-VmxValue -Path $newVmxPath -Key "msg.autoAnswer" -Value "TRUE"
 
 Write-Host "VM created successfully: $($vm.name)"
 Write-Host "VMX path: $newVmxPath"

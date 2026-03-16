@@ -16,6 +16,10 @@ if (-not $vm) {
     throw "VM name not found in config: $VmName"
 }
 
+if (-not (Test-Path $config.vmrunPath)) {
+    throw "vmrun.exe not found: $($config.vmrunPath)"
+}
+
 $vmxPath = Join-Path $vm.destinationPath $vm.vmxName
 if (-not (Test-Path $vmxPath)) {
     throw "VMX file not found: $vmxPath"

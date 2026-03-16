@@ -42,7 +42,11 @@ resource "vsphere_virtual_machine" "this" {
         ipv4_netmask = var.public_netmask
       }
 
-      ipv4_gateway = var.public_gateway
+      network_interface {}
+
+      network_interface {}
+
+      ipv4_gateway    = var.public_gateway
       dns_server_list = var.dns_servers
     }
   }

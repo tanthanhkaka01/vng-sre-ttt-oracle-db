@@ -24,10 +24,11 @@ openstack_domain_name = "Default"
 openstack_nodes = [
   {
     name                  = "rac-node3.company.local"
-    image_name            = "oracle-linux-8.8"
+    image_name            = "oracle-linux-8.8-image-id"
     flavor_name           = "ol8-rac-large"
     keypair               = "oracle-automation"
     security_groups       = ["default", "oracle-rac"]
+    root_volume_size_gb   = 120
     cloud_init            = <<-EOT
 #cloud-config
 hostname: rac-node3
@@ -58,10 +59,11 @@ EOT
   },
   {
     name                  = "rac-node4.company.local"
-    image_name            = "oracle-linux-8.8"
+    image_name            = "oracle-linux-8.8-image-id"
     flavor_name           = "ol8-rac-large"
     keypair               = "oracle-automation"
     security_groups       = ["default", "oracle-rac"]
+    root_volume_size_gb   = 120
     cloud_init            = <<-EOT
 #cloud-config
 hostname: rac-node4
@@ -91,4 +93,3 @@ EOT
     management_ip         = "192.168.130.12"
   }
 ]
-

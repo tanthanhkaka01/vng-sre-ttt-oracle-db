@@ -26,6 +26,7 @@ module "openstack_nodes" {
   keypair               = each.value.keypair
   security_groups       = each.value.security_groups
   cloud_init            = each.value.cloud_init
+  root_volume_size_gb   = each.value.root_volume_size_gb
   public_network_id     = each.value.public_network_id
   public_subnet_id      = each.value.public_subnet_id
   public_ip             = each.value.public_ip
@@ -36,4 +37,3 @@ module "openstack_nodes" {
   management_subnet_id  = each.value.management_subnet_id
   management_ip         = each.value.management_ip
 }
-
