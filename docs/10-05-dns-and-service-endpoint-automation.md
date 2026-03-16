@@ -17,6 +17,24 @@ Automation scope includes:
 
 ---
 
+## Shared DNS Assumption for 3 Platforms
+
+For the current simulation, assume all three target platforms use the same central DNS service for the `company.local` zone.
+
+Shared assumption:
+
+- DNS zone: `company.local`
+- Primary DNS: `192.168.10.53`
+- Secondary DNS: `192.168.10.54`
+- Consumed by: VMware vSphere, OpenStack, and VMware Workstation Pro lab guests
+- Record ownership: one central DNS workflow, not one DNS server per platform
+
+This means the platform-specific automation only needs to do two things:
+
+1. Point guest operating systems to the shared DNS resolvers
+2. Send DNS record create or update requests to the same central DNS automation path
+
+---
 ## DNS Objects to Automate
 
 | Record Type | Example | Purpose |
@@ -37,6 +55,9 @@ Example variable structure:
 
 ```yaml
 dns_records:
+  shared_dns_servers:
+    - 192.168.10.53
+    - 192.168.10.54
   hosts:
     - name: rac-node1.company.local
       value: 192.168.10.11
@@ -84,6 +105,24 @@ The preferred model is:
 
 ---
 
+## Platform Simulation with Shared DNS
+
+Simulation date: `2026-03-16`
+
+| Platform | How guest gets shared DNS | How central DNS records are handled | Current simulation verdict |
+|------|------|------|------|
+| VMware vSphere | Terraform guest customization passes `dns_server_list` into the cloned VM | `module.dns_primary` represents centralized DNS record intent for the production site | Guest DNS assignment is modeled in code; record creation is still placeholder-only |
+| OpenStack | Cloud-init or Ansible applies the same shared resolvers after first boot | `module.dns_dr` represents centralized DNS record intent for the DR site | Guest DNS assignment is simulated; record creation is still placeholder-only |
+| VMware Workstation Pro 17 | Guest DNS is set inside the Oracle Linux guest through Ansible network baseline or lab DHCP override | Lab still calls the same central DNS process, not a separate lab-only DNS server | Guest DNS assignment is simulated; central record creation remains manual/placeholder |
+
+Practical meaning:
+
+- The DNS server pair is shared
+- The zone is shared
+- Only the VM creation and guest bootstrap method changes by platform
+- The DNS record lifecycle should stay centralized so `db.company.local` behaves the same everywhere
+
+---
 ## Step-by-Step DNS Build Flow
 
 Use this order:
@@ -95,7 +134,7 @@ Use this order:
 5. Run lookup validation from all RAC nodes
 6. Save results in the change ticket
 
-Freshers should not update the logical DB endpoint first. Always build the lower-level records before the user-facing alias.
+Do not update the logical DB endpoint first. Build the lower-level records before the user-facing alias.
 
 ---
 
@@ -147,6 +186,55 @@ terraform -chdir=automation/terraform/environments/prod apply -target=module.dns
 
 ---
 
+## Platform-Specific Simulation Notes
+
+### VMware vSphere
+
+The repository already passes DNS resolvers at VM clone time through [automation/terraform/modules/vmware_vm/main.tf](../automation/terraform/modules/vmware_vm/main.tf).
+
+Simulation flow:
+
+1. Terraform provisions VM metadata and public IP settings
+2. vSphere guest customization injects `192.168.10.53` and `192.168.10.54`
+3. Terraform `module.dns_primary` carries the desired central DNS records
+4. Ansible `dns-validate.yml` confirms name resolution from the guest OS
+
+Current honesty check:
+
+- Guest DNS resolver assignment is implemented
+- Central DNS record creation is still a placeholder through `null_resource`
+
+### OpenStack
+
+The repository already models the central DNS intent through [automation/terraform/environments/dr/main.tf](../automation/terraform/environments/dr/main.tf), while guest resolver assignment is best simulated through cloud-init plus Ansible baseline.
+
+Simulation flow:
+
+1. Terraform creates OpenStack ports and instances
+2. Cloud-init writes the same shared resolver pair into the guest
+3. Terraform `module.dns_dr` carries the desired central DNS records
+4. Ansible `dns-validate.yml` confirms name resolution from the guest OS
+
+Current honesty check:
+
+- Shared DNS usage is simulated cleanly
+- DNS record creation is still placeholder-only
+
+### VMware Workstation Pro 17
+
+Workstation Pro does not create DNS records itself. For this platform, the clean simulation is:
+
+1. PowerShell clones and boots the lab VM
+2. The Oracle Linux guest receives the shared DNS pair through Ansible network baseline or DHCP settings
+3. The same central DNS workflow manages `company.local` records
+4. `dns-validate.yml` is run after guest reachability is ready
+
+Current honesty check:
+
+- Workstation can consume the shared DNS service
+- It does not yet automate central DNS record creation from the lab path
+
+---
 ## Example Script for Dynamic DNS Update
 
 If the DNS platform does not have a Terraform provider, use a controlled script.
@@ -308,6 +396,11 @@ dig +short db.company.local
 
 After DNS and service endpoint automation is in place, the environment is ready to continue with Oracle Grid Infrastructure installation and the higher database layers.
 
+Detailed platform runbook:
+[../automation/docs/runbooks/dns-end-to-end-by-platform.md](../automation/docs/runbooks/dns-end-to-end-by-platform.md)
+
 See:
 [04-oracle-grid-infrastructure-installation.md](./04-oracle-grid-infrastructure-installation.md)
+
+
 

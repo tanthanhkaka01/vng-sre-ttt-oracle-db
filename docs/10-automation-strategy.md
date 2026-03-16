@@ -57,7 +57,8 @@ Use this route when building a local learning or test lab on VMware Workstation 
 Practical execution note:
 
 - The current repository now includes silent automation scaffolding for Oracle Grid installation, RAC database creation, and Data Guard broker bootstrap, but these flows still depend on staged Oracle media, shared storage, and real platform provider configuration.
-- For a junior-friendly, platform-by-platform simulation of what can run now and what still needs implementation, see [../automation/docs/runbooks/platform-end-to-end-simulation.md](../automation/docs/runbooks/platform-end-to-end-simulation.md).
+- For a platform-by-platform simulation of what can run now and what still needs implementation, see [../automation/docs/runbooks/platform-end-to-end-simulation.md](../automation/docs/runbooks/platform-end-to-end-simulation.md).
+- For a DNS-specific end-to-end operating flow across VMware vSphere, OpenStack, and VMware Workstation Pro, see [../automation/docs/runbooks/dns-end-to-end-by-platform.md](../automation/docs/runbooks/dns-end-to-end-by-platform.md).
 
 ### Simulation Review for VM Automation (2026-03-15)
 
@@ -84,7 +85,30 @@ Important limitation of this review:
 |------|------|------|------|
 | VMware vSphere | Terraform environment and module wiring exist | Yes, if real vCenter/template/network values are supplied | OK at VM provisioning layer, not yet full RAC end-to-end |
 | OpenStack | Terraform environment and module wiring exist | Yes, if real OpenStack credentials, networks, image, and security groups are supplied | OK at instance provisioning layer, not yet full RAC end-to-end |
-| VMware Workstation Pro 17 | PowerShell scripts exist for clone/start/stop/build | Yes, if `vmrun.exe`, template VM, and local paths are valid | Best current path for lab simulation and junior onboarding |
+| VMware Workstation Pro 17 | PowerShell scripts exist for clone/start/stop/build | Yes, if `vmrun.exe`, template VM, and local paths are valid | Best current path for lab simulation and onboarding |
+
+### DNS Simulation for 3 Platforms with Shared DNS (2026-03-16)
+
+The repository was also aligned to simulate one shared DNS service for all three target platforms instead of separate DNS servers per environment.
+
+Shared simulation assumptions:
+
+- DNS zone: `company.local`
+- Shared resolvers: `192.168.10.53`, `192.168.10.54`
+- Shared logical endpoint: `db.company.local`
+- Shared DNS process for record lifecycle across production, DR, and lab
+
+Platform behavior in this simulation:
+
+- VMware vSphere injects the shared resolver pair during guest customization
+- OpenStack consumes the same resolver pair through cloud-init or guest baseline automation
+- VMware Workstation Pro lab guests consume the same resolver pair through Ansible or local virtual network settings
+
+Honest current state:
+
+- Resolver configuration is now documented as one common pattern across all three platforms
+- DNS record creation in Terraform is still modeled through the placeholder `dns_records` module
+- DNS validation from guests is executable through `automation/ansible/playbooks/dns-validate.yml`
 
 ### Platform-by-Platform Notes
 
@@ -489,4 +513,6 @@ Lab path:
 3. [10-03-network-configuration-automation.md](./10-03-network-configuration-automation.md)
 4. [10-04-os-baseline-and-oracle-prerequisite-automation.md](./10-04-os-baseline-and-oracle-prerequisite-automation.md)
 5. [10-05-dns-and-service-endpoint-automation.md](./10-05-dns-and-service-endpoint-automation.md)
+
+
 

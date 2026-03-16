@@ -1,8 +1,8 @@
 ansible_user: ansible
 ansible_become: true
 dns_servers:
-  - 192.168.110.53
-  - 192.168.110.54
+  - 192.168.10.53
+  - 192.168.10.54
 oracle_groups:
   - { name: "oinstall", gid: 1001 }
   - { name: "dba", gid: 1002 }

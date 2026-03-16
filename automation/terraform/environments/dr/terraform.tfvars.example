@@ -40,6 +40,13 @@ users:
     ssh_authorized_keys:
       - ssh-rsa AAAAB3NzaExample
 package_update: true
+manage_resolv_conf: true
+resolv_conf:
+  nameservers:
+    - 192.168.10.53
+    - 192.168.10.54
+  searchdomains:
+    - company.local
 packages:
   - chrony
   - python3
@@ -75,6 +82,13 @@ users:
     ssh_authorized_keys:
       - ssh-rsa AAAAB3NzaExample
 package_update: true
+manage_resolv_conf: true
+resolv_conf:
+  nameservers:
+    - 192.168.10.53
+    - 192.168.10.54
+  searchdomains:
+    - company.local
 packages:
   - chrony
   - python3
@@ -93,3 +107,4 @@ EOT
     management_ip         = "192.168.130.12"
   }
 ]
+
